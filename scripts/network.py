@@ -6,12 +6,15 @@ def networker(graph):
 
     G.add_nodes_from(graph.vertices)
 
-    for v1, v2 in graph.keys():
-        G.add_edge(v1, v2)
+    # {(a, b):3}
+    edges = []
 
+    for e in graph:
+        edges.append((e[0], e[1], graph[e]))
+
+    G.add_weighted_edges_from(edges)
     return G
 
 def plot_graph(graph):
     nx.draw(networker(graph))
     plt.show()
-
