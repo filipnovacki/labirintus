@@ -6,7 +6,7 @@ class Graph(dict):
         (lambda vertex: self.vertices.append(vertex) if type(self.vertices) ==\
             list else self.vertices.add(vertex))(vertex)
 
-    def add_edge(self, v1, v2, w):
+    def add_edge(self, v1, v2, w=1):
         if v1 in self.vertices and v2 in self.vertices:
             self[(lambda v1, v2: (v1, v2) if str(v1) < str(v2) else \
                     (v2, v1))(v1, v2)] = int(w)
