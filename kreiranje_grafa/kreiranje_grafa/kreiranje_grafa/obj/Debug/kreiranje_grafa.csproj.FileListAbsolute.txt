@@ -1,0 +1,7 @@
+D:\kreiranje_grafa\kreiranje_grafa\kreiranje_grafa\bin\Debug\kreiranje_grafa.exe.config
+D:\kreiranje_grafa\kreiranje_grafa\kreiranje_grafa\bin\Debug\kreiranje_grafa.exe
+D:\kreiranje_grafa\kreiranje_grafa\kreiranje_grafa\bin\Debug\kreiranje_grafa.pdb
+D:\kreiranje_grafa\kreiranje_grafa\kreiranje_grafa\obj\Debug\kreiranje_grafa.csprojAssemblyReference.cache
+D:\kreiranje_grafa\kreiranje_grafa\kreiranje_grafa\obj\Debug\kreiranje_grafa.csproj.CoreCompileInputs.cache
+D:\kreiranje_grafa\kreiranje_grafa\kreiranje_grafa\obj\Debug\kreiranje_grafa.exe
+D:\kreiranje_grafa\kreiranje_grafa\kreiranje_grafa\obj\Debug\kreiranje_grafa.pdb
