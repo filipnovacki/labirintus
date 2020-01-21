@@ -1,5 +1,5 @@
 from math import sqrt
-def input_data(vertices_names = False):
+def input_data(vertices_names, heuristic):
     edges = []
     vertices = []
 
@@ -10,8 +10,11 @@ def input_data(vertices_names = False):
         vertices = [x[:-1].split(',') for x in f.readlines()[1:]]
         start = min(vertices, key = lambda x: int(x[2]))[0]
         end = max(vertices, key = lambda x: int(x[2]))[0]
-        vertices = [x + [pow(int(x[2]), 2)+pow(int(x[1]), 2)] for x in vertices]
-        #vertices = [x + [sqrt(pow(int(x[2]), 2) + pow(int(x[1]),2)) ] for x in [x[:-1].split(',') for x in f.readlines()[1:]]]
+        if heuristic == 'sqrt':
+            vertices = [x + [sqrt(pow(int(x[2]), 2)+pow(int(x[1]), 2))] for x in vertices]
+        elif heuristic == 'pow':
+            vertices = [x +      [pow(int(x[2]), 2)+pow(int(x[1]), 2)] for x in vertices]
+
     if vertices_names:
         with open("data/surnames.csv") as s:
             names = [x[:-1].split(',')[0].capitalize() for x in s.readlines()[1:]]
@@ -28,12 +31,12 @@ def input_data(vertices_names = False):
 
     return (vertices, edges, start, end)
 
-def populate_graph(vertices_names=False):
-    data = input_data(vertices_names)
+def populate_graph(vertices_names=False, heuristic = 'sqrt'):
+    data = input_data(vertices_names, heuristic)
     import networkx as nx
     G = nx.Graph()
     G.add_edges_from(data[1])
     for n in data[0]:
-        G.add_node(n[0], coords = (n[1], n[2]))
+        G.add_node(n[0], coords = (n[1], n[2]), h=n[3])
     return G, data[2], data[3]
 
