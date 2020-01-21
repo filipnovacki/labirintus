@@ -2,8 +2,8 @@ def clean_graph(G, src, end):
     delete_one = []
     for node in G:
         if len(G[node]) is 1 and\
-                node is not src and\
-                node is not end:
+                node != src and\
+                node != end:
             delete_one.append(node)
     G.remove_nodes_from(delete_one)
 
