@@ -1,3 +1,4 @@
+from math import sqrt
 def input_data(vertices_names = False):
     edges = []
     vertices = []
@@ -7,7 +8,10 @@ def input_data(vertices_names = False):
 
     with open("data/vrhovi.txt") as f:
         vertices = [x[:-1].split(',') for x in f.readlines()[1:]]
-
+        start = min(vertices, key = lambda x: int(x[2]))[0]
+        end = max(vertices, key = lambda x: int(x[2]))[0]
+        vertices = [x + [pow(int(x[2]), 2)+pow(int(x[1]), 2)] for x in vertices]
+        #vertices = [x + [sqrt(pow(int(x[2]), 2) + pow(int(x[1]),2)) ] for x in [x[:-1].split(',') for x in f.readlines()[1:]]]
     if vertices_names:
         with open("data/surnames.csv") as s:
             names = [x[:-1].split(',')[0].capitalize() for x in s.readlines()[1:]]
@@ -19,8 +23,6 @@ def input_data(vertices_names = False):
             x[0] = dictionary[x[0]]
             x[1] = dictionary[x[1]]
 
-    start = min(vertices, key = lambda x: int(x[2]))[0]
-    end = max(vertices, key = lambda x: int(x[2]))[0]
 
     edges = [(a[0], a[1], {'weight': a[2]}) for a in edges]
 
