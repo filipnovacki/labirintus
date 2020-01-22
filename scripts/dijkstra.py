@@ -20,8 +20,6 @@ def dijkstra(G, src):
     from anytree import Node
     distances = {}.fromkeys(list(G.nodes), float('inf'))
     distances[src] = 0
-    root = Node(src)
-    #prev = {}.fromkeys(list(G.nodes), Node(list))
     prev = {x:Node(x) for x in G.nodes}
     prev[src] = Node(src)
     spath = {}.fromkeys(list(G.nodes), False)
