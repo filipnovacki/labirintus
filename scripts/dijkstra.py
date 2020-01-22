@@ -17,8 +17,13 @@ def min_dist(G, dist, spath):
     return min_index
 
 def dijkstra(G, src):
+    from anytree import Node
     distances = {}.fromkeys(list(G.nodes), float('inf'))
     distances[src] = 0
+    root = Node(src)
+    #prev = {}.fromkeys(list(G.nodes), Node(list))
+    prev = {x:Node(x) for x in G.nodes}
+    prev[src] = Node(src)
     spath = {}.fromkeys(list(G.nodes), False)
     for _ in G.nodes:
         u = min_dist(G, distances, spath)
@@ -27,4 +32,5 @@ def dijkstra(G, src):
             if G.has_edge(u, v) and spath[v] is False and\
                     distances[v] > distances[u] + int(G.edges[u, v]['weight']):
                 distances[v] = distances[u] + int(G.edges[u, v]['weight'])
-    return distances
+                prev[v].parent = prev[u]
+    return distances, prev

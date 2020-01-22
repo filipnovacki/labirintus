@@ -11,7 +11,6 @@ def a_min_dist(G, dist, spath):
 
 def astar(G, src, end):
     distances = {x:[float('inf'), G.nodes[x]['h']] for x in G.nodes}
-    #print(distances)
     distances[src][0] = 0
     spath = {}.fromkeys(list(G.nodes), False)
 

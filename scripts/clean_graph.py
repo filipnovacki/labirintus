@@ -1,7 +1,7 @@
 def clean_graph(G, src, end):
     delete_one = []
     for node in G:
-        if len(G[node]) is 1 and\
+        if len(G[node]) == 1 and\
                 node != src and\
                 node != end:
             delete_one.append(node)
@@ -9,7 +9,7 @@ def clean_graph(G, src, end):
 
     delete_two = []
     for node in G:
-        if len(G[node]) is 2:
+        if len(G[node]) == 2:
             weight_sum = sum([int(G[node][a]['weight']) for a in G[node]])
             G.add_edge(*G[node], weight = weight_sum)
             delete_two.append(node)
