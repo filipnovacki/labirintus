@@ -411,7 +411,9 @@
 	
 	\subsection{Upute za pokretanje}
 	
-	
+	TODO:
+	-struktura programskog rješenja
+	-
 	
 	\section{Opis problema}
 	U radu se rješava problem pronalaženja najkraćeg puta za izlazak iz zadanog labirinta. Ulaz je u ovom slučaju labirint reprezentiran kao matrica nula i jedinica, gdje je svaka jedinica dio puta, a svaka nula zid kroz koji se ne može proći. Labirint se može prikazati kao graf u kojem je su svi "neravni" dijelovi vrhovi - početak i kraj, ugao u kojem put mijenja smjer, završetak slijepe ulice te raskrižje. Svi vrhovi između kojih postoji neki put spojeni su bridovima, s tim da se međusobno spajaju samo uzastopni vrhovi, a nijedan vrh nije stupnja većeg od 4. 
@@ -539,7 +541,7 @@ Druga funkcija, \texttt{populate\_graph}, kreira najprije prazan graf, a zatim g
 \end{Verbatim}
 \end{tcolorbox}
 
-Varijablama se dodijeljuju pripadajuće vrijednosti iz funkcije \texttt{graph\_data}:
+Varijablama se dodjeljuju pripadajuće vrijednosti iz funkcije \texttt{graph\_data}:
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{6}{\boxspacing}
@@ -550,6 +552,8 @@ Varijablama se dodijeljuju pripadajuće vrijednosti iz funkcije \texttt{graph\_d
 \end{Verbatim}
 \end{tcolorbox}
 
+Uvezena je biblioteka \texttt{pprint} kako bi ispis bio uredniji.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{7}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -558,12 +562,16 @@ Varijablama se dodijeljuju pripadajuće vrijednosti iz funkcije \texttt{graph\_d
 \end{Verbatim}
 \end{tcolorbox}
 
+Slijedi ispis prvih 10 vrhova iz grafa $G$ s pripadajućim koordinatama.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{8}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{n}{pp}\PY{o}{.}\PY{n}{pprint}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{G}\PY{o}{.}\PY{n}{nodes}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{coords}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{10}\PY{p}{]}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
+
+Nadalje, ispisani su vrhovi iz grafa G s pripadajućim heuristikama. Vrijednosti heuristika dobivene su računanjem "zračne" udaljenosti pojedine točke od točke cilja (duljina hipotenuze prema Pitagorinom poučku).
 
     \begin{Verbatim}[commandchars=\\\{\}]
 [('Smith', ('10', '0')),
@@ -598,6 +606,8 @@ Varijablama se dodijeljuju pripadajuće vrijednosti iz funkcije \texttt{graph\_d
  ('Wilson', 13.038404810405298)]
     \end{Verbatim}
 
+Isto su tako u nastavku ispisani bridovi preko vrhova koje spajaju i s pripadajućim težinama.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{10}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -618,12 +628,16 @@ Varijablama se dodijeljuju pripadajuće vrijednosti iz funkcije \texttt{graph\_d
  ('Miller', 'Castillo', '2')]
     \end{Verbatim}
 
+Biblioteka \texttt{networkx} koristi se za rad s grafovima. U početku su autori sami pokušali implementirati graf, no ispostavilo se da su koristili vrlo slične strukture podataka kao i \texttt{networkx}, a \texttt{networkx} biblioteka pokazala se kao elegantnije rješenje, a uz to je i testirana pa se vrijeme nije tratilo. Pokušaj implementacije nalazi se u skripti \texttt{graph} u mapi \texttt{scripts}.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{11}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k+kn}{import} \PY{n+nn}{networkx} \PY{k}{as} \PY{n+nn}{nx}
 \end{Verbatim}
 \end{tcolorbox}
+
+Naš labirint prikazan je sljedećim grafom. Argumenti funkcije \texttt{draw} su graf $G$ koji se želi nacrtati i izabrani \textit{layout} za prikaz grafa. Osim ovih, mogu se dodati i drugi argumenti za podešavanje pojedinih parametara te je tako ovdje postavljena veličina vrhova na $50\text{px}$.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{12}{\boxspacing}
@@ -640,6 +654,8 @@ Varijablama se dodijeljuju pripadajuće vrijednosti iz funkcije \texttt{graph\_d
     \hypertarget{obiux10dan-graf-bez-prezimena-ljudi}{%
 \subsection{Običan graf bez prezimena
 ljudi}\label{obiux10dan-graf-bez-prezimena-ljudi}}
+
+U nastavku je prikazan jednak postupak proveden na jednakom grafu uz razliku u imenima vrhova, što je postignuto mijenjanjem prvog pozicijskog argumenta u \texttt{False}.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{13}{\boxspacing}
@@ -691,12 +707,18 @@ ljudi}\label{obiux10dan-graf-bez-prezimena-ljudi}}
 \subsection{Smanjivanje kompleksnosti
 grafa}\label{smanjivanje-kompleksnosti-grafa}}
 
+U program se uvozi funkcija \texttt{clean\_graph} iz istoimene skripte koja služi za brisanje nepotrebnih vrhova (i bridova) grafa.
+
+Vrhovi se brišu radi smanjivanja kompleksnosti grafa te tako algoritmima treba kraće vrijeme za izvršavanje, a sam algoritam ne utječe na ispravnost rješenja. Složenost ovog algoritma je $O(n)$, dok Dijkstrin algoritam i \texttt{A*} algoritam imaju kvadratnu složenost pa je ovime ukupno vrijeme izvršavanja kraće.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{17}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k+kn}{from} \PY{n+nn}{scripts}\PY{n+nn}{.}\PY{n+nn}{clean\PYZus{}graph} \PY{k+kn}{import} \PY{n}{clean\PYZus{}graph}
 \end{Verbatim}
 \end{tcolorbox}
+
+Funkcija kao argument prima graf kojeg će očistiti. Najprije briše vrhove stupnja 1 jer to znači da je taj vrh završetak slijepe ulice u labirintu i sigurno neće biti dio puta. Ovdje su izuzeti početak i kraj labirinta. Osim toga brišu se i vrhovi stupnja 2 jer su to obični zavoji koji također nemaju utjecaj na put do cilja. U kodu ispod funkcija je stavljena u petlju 20 puta jer se autorima to čini optimalno za ovu veličinu grafa. Za veće grafove može se ponoviti i više puta, no nije kritično za izvršavanje programa.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{18}{\boxspacing}
@@ -707,6 +729,8 @@ grafa}\label{smanjivanje-kompleksnosti-grafa}}
     \PY{n}{cl\PYZus{}graph} \PY{o}{=} \PY{n}{clean\PYZus{}graph}\PY{p}{(}\PY{n}{cl\PYZus{}graph}\PY{p}{,} \PY{n}{src}\PY{p}{,} \PY{n}{end}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
+
+Za usporedbu, priložen je ispis brojevnog stanja vrhova grafa prije i poslije čišćenja.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{19}{\boxspacing}
@@ -721,6 +745,7 @@ Cijeli graf: 166 vrhova
 Čisti graf: 53 vrhova
     \end{Verbatim}
 
+Sad je naš labirint značajno pojednostavljen - broj vrhova trostruko se smanjio i nije ostao nijedan vrh stupnja 2 ili manjeg (osim početka i kraja). To se jasno vidi u prikazu pojednostavljenog grafa:
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{20}{\boxspacing}
