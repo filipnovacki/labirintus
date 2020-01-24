@@ -363,19 +363,78 @@
     
     
 
-\begin{document}
-    
-    \maketitle
-    
-    
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\usepackage[croatian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{pmboxdraw}
+\usepackage{fancyvrb}
+\usepackage{tocloft}
+
+\begin{document}
+	
+	%\maketitle
+	\input{naslov}
+
+	\section{Uvod}
+	Ovo je projektni zadatak iz kolegija Diskretne strukture i teorija grafova na Fakultetu organizacije i informatike u Varaždinu Sveučilišta u Zagrebu. Cilj projektnog zadatka povezati je gradivo iz kolegija s primjenom iz stvarnog života, ili barem na nekom primjeru koji se može iskoristiti u neke druge svrhe. 
+	
+	Projekt je verzioniran na GitHubu te je cijeli kod dostupan na poveznici \url{www.github.com/filipnovacki/labirintus}. Rješenje je razvijano u \texttt{Pythonu} uz pomoć \texttt{Jupyter Notebooka} te biblioteka koje olakšavaju rad s grafovima i algoritmima. Popis te opis njihove instalacije bit će opisan u idućem poglavlju.
+	
+	Uz ovaj dokument priložena je i datoteka sa svim izvornim datotekama uključujući i \textit{notebook} koji se može pokrenuti. U ovom će dokumentu biti sadržaj cijelog \textit{notebooka} te objašnjenje i rezoniranje o postupcima, a \textit{notebook} bez objašnjenja (odnosno spreman na izvršavanje) nalazi se u drugoj priloženoj datoteci.
+	
+	\subsection{Instalacija biblioteka i pokretanje}
+	
+	\texttt{Python} se može instalirati preuzimanjem datoteka sa službene web stranice ili na Linux distribucijama pomoću službenih repozitorija. 
+	
+	Za instalaciju biblioteka potrebno je izvršiti naredbu \texttt{pip install -t requirements.txt} dok smo u mapi gdje je projekt i datoteka \texttt{requirements.txt}. Ukoliko \texttt{pip} nije instaliran, možemo ga instalirati pomoću \texttt{python -m ensurepip}. 
+	
+	\subsection{Upute za pokretanje}
+	
+	
+	
+	\section{Opis problema}
+	U radu se rješava problem pronalaženja najkraćeg puta za izlazak iz zadanog labirinta. Ulaz je u ovom slučaju labirint reprezentiran kao matrica nula i jedinica, gdje je svaka jedinica dio puta, a svaka nula zid kroz koji se ne može proći. Labirint se može prikazati kao graf u kojem je su svi "neravni" dijelovi vrhovi - početak i kraj, ugao u kojem put mijenja smjer, završetak slijepe ulice te raskrižje. Svi vrhovi između kojih postoji neki put spojeni su bridovima, s tim da se međusobno spajaju samo uzastopni vrhovi, a nijedan vrh nije stupnja većeg od 4. 
+	
+	Težine su u zadatku zadane brojem kvadratića između dva križanja, odnosno vrha u grafu. To je možda malo nespretno rečeno tako da ćemo kod rješavanja pretpostaviti da su autori zadatka mislili na korake između vrhova.
+	
+	Svaki "korak" u labirintu ima težinu 1, iz čega se bridovima dodjeljuju težine, ovisno o tome koliko koraka ima od jednog vrha brida do drugog (koliko su vrhovi udaljeni). Ovakva pretvorba omogućava rješavanje labirinta pomoću algoritama za pronalaženje najkraćeg puta u grafu. Ovdje je to izvedeno pomoću poboljšanog Dijkstrinog algoritma i \texttt{A*} algoritma.
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=.9\linewidth]{"slikice/labirint.jpg"}
+		\label{lab1}
+		\caption{Labirint koji se rješava u radu}
+	\end{figure}
     
     \hypertarget{potraga-za-izgubljenim-blagom-zaboravljenog-faraona}{%
 \section{Potraga za izgubljenim blagom zaboravljenog
 faraona}\label{potraga-za-izgubljenim-blagom-zaboravljenog-faraona}}
 
-    \hypertarget{baratanje-podatcima}{%
+    \hypertarget{baratanje-podatcima}{
 \subsection{Baratanje podatcima}\label{baratanje-podatcima}}
+
+Ulazni podaci pohranjeni su u običnoj tekstnoj datoteci u obliku matrice ispunjene nulama i jedinicama pri čemu svaka jedinica predstavlja komadić prohodnog puta u labirintu, a svaka nula je zid kroz koji se ne može proći. Zadani labirint može se iscrtati na sljedeći način:
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{1}{\boxspacing}
@@ -409,6 +468,8 @@ faraona}\label{potraga-za-izgubljenim-blagom-zaboravljenog-faraona}}
 
     \end{Verbatim}
 
+U datoteci \texttt{vrhovi.txt} pohranjeni su svi vrhovi s pripadajućim koordinatama (redovi i stupci u kojima se pojedini vrhovi nalaze) koji su izračunati pomoću programa \texttt{kreiranje\_grafa} koji je napravljen samo za tu svrhu. Ispod teksta prikazan je ispis prvih 10 vrhova, a u datoteci se nalaze svi.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{2}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -430,6 +491,8 @@ G       6       8
 H       6       10
 I       1       10
     \end{Verbatim}
+
+Nadalje, datoteka \texttt{bridovi.txt} sadrži popis bridova definiranih dvama vrhovima i pripadnom težinom. Slijedi popis prvih 10 bridova.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{3}{\boxspacing}
@@ -456,6 +519,8 @@ I       J       3
     \hypertarget{unos-u-graf}{%
 \subsection{Unos u graf}\label{unos-u-graf}}
 
+Za početak, potrebno je napraviti \texttt{import} biblioteka s funkcijama za pretvaranje ulaznih podataka u grafove.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{4}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -463,12 +528,18 @@ I       J       3
 \end{Verbatim}
 \end{tcolorbox}
 
+Funkcija \texttt{input\_data} pretvara podatke iz ulaznih datoteka u radne podatke o vrhovima, bridovima, početku i kraju labirinta. Funkcija vraća vrhove, bridove, početak i kraj labirinta.
+
+Druga funkcija, \texttt{populate\_graph}, kreira najprije prazan graf, a zatim ga puni bridovima i vrhovima. Ona prima dva argumenta, \texttt{vertices\_names} i \texttt{heuristics}. Prvi prima \texttt{bool} vrijednost (\texttt{True} ili \texttt{False}). Istinita vrijednost prvog argumenta sugerira algoritmu da želimo popularna američka prezimena za imena vrhova, a neistinita da želimo ostaviti slovčane vrijednosti. Ova funkcionalnost nije meritum za dobro izvršavanje algoritma, ali mu da malo duha da nas obična slova ne umore previše. Drugi argument određuje kakva će biti heuristika - ako je on \texttt{sqrt}, heuristika će biti korijen izračunatog broja, a ako je \texttt{pow}, ostat će takav broj kakav je izračunat te će heuristika imati veću težinu s obzirom na prijeđenu udaljenost.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{5}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{n}{graph\PYZus{}data} \PY{o}{=} \PY{n}{graf\PYZus{}entry}\PY{o}{.}\PY{n}{populate\PYZus{}graph}\PY{p}{(}\PY{k+kc}{True}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sqrt}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
+
+Varijablama se dodijeljuju pripadajuće vrijednosti iz funkcije \texttt{graph\_data}:
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{6}{\boxspacing}
@@ -650,6 +721,7 @@ Cijeli graf: 166 vrhova
 Čisti graf: 53 vrhova
     \end{Verbatim}
 
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{20}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -661,7 +733,7 @@ Cijeli graf: 166 vrhova
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_24_0.png}
     \end{center}
     { \hspace*{\fill} \\}
-    
+
     \hypertarget{dijkstrin-algoritam}{%
 \section{Dijkstrin algoritam}\label{dijkstrin-algoritam}}
 
@@ -967,714 +1039,714 @@ on/Phillips/Campbell/Ramirez/Evans/Turner/Torres/Wright/King')
     \PY{n+nb}{print}\PY{p}{(}\PY{n}{pre} \PY{o}{+} \PY{n}{node}\PY{o}{.}\PY{n}{name}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-Smith
-└── Johnson
-    ├── Williams
-    │   ├── Brown
-    │   │   └── Jones
-    │   │       └── Miller
-    │   │           ├── Davis
-    │   │           │   └── Garcia
-    │   │           │       └── Rodriguez
-    │   │           │           └── Wilson
-    │   │           └── Castillo
-    │   │               ├── Olson
-    │   │               │   └── Webb
-    │   │               │       └── Washington
-    │   │               └── Tucker
-    │   │                   └── Freeman
-    │   │                       └── Burns
-    │   │                           ├── Henry
-    │   │                           └── Vasquez
-    │   │                               ├── Snyder
-    │   │                               │   └── Simpson
-    │   │                               │       └── Crawford
-    │   │                               └── Jimenez
-    │   └── West
-    │       ├── Ramos
-    │       │   └── Wallace
-    │       │       └── Griffin
-    │       │           └── Martinez
-    │       │               └── Anderson
-    │       │                   ├── Taylor
-    │       │                   │   ├── Thomas
-    │       │                   │   │   └── Hernandez
-    │       │                   │   │       └── Moore
-    │       │                   │   │           ├── Martin
-    │       │                   │   │           │   ├── Jackson
-    │       │                   │   │           │   │   └── Thompson
-    │       │                   │   │           │   └── White
-    │       │                   │   │           │       └── Lopez
-    │       │                   │   │           │           └── Lee
-    │       │                   │   │           │               └── Gonzalez
-    │       │                   │   │           │                   └── Harris
-    │       │                   │   │           │                       ├──
-Clark
-    │       │                   │   │           │                       │   ├──
-Lewis
-    │       │                   │   │           │                       │   │
-└── Robinson
-    │       │                   │   │           │                       │   │
-├── Walker
-    │       │                   │   │           │                       │   │
-│   └── Perez
-    │       │                   │   │           │                       │   │
-│       └── Hall
-    │       │                   │   │           │                       │   │
-│           ├── Young
-    │       │                   │   │           │                       │   │
-│           │   └── Allen
-    │       │                   │   │           │                       │   │
-│           │       └── Sanchez
-    │       │                   │   │           │                       │   │
-│           │           └── Edwards
-    │       │                   │   │           │                       │   │
-│           └── Collins
-    │       │                   │   │           │                       │   │
-├── Phillips
-    │       │                   │   │           │                       │   │
-│   └── Campbell
-    │       │                   │   │           │                       │   │
-│       ├── Ramirez
-    │       │                   │   │           │                       │   │
-│       │   ├── Scott
-    │       │                   │   │           │                       │   │
-│       │   │   ├── Wright
-    │       │                   │   │           │                       │   │
-│       │   │   │   └── King
-    │       │                   │   │           │                       │   │
-│       │   │   └── Green
-    │       │                   │   │           │                       │   │
-│       │   │       ├── Baker
-    │       │                   │   │           │                       │   │
-│       │   │       │   ├── Adams
-    │       │                   │   │           │                       │   │
-│       │   │       │   └── Nelson
-    │       │                   │   │           │                       │   │
-│       │   │       └── Hill
-    │       │                   │   │           │                       │   │
-│       │   └── Evans
-    │       │                   │   │           │                       │   │
-│       │       └── Turner
-    │       │                   │   │           │                       │   │
-│       │           └── Torres
-    │       │                   │   │           │                       │   │
-│       │               └── Parker
-    │       │                   │   │           │                       │   │
-│       └── Mitchell
-    │       │                   │   │           │                       │   │
-│           ├── Roberts
-    │       │                   │   │           │                       │   │
-│           └── Carter
-    │       │                   │   │           │                       │   │
-└── Rogers
-    │       │                   │   │           │                       │   │
-├── Cook
-    │       │                   │   │           │                       │   │
-│   └── Rivera
-    │       │                   │   │           │                       │   │
-│       └── Nguyen
-    │       │                   │   │           │                       │   │
-│           ├── Morris
-    │       │                   │   │           │                       │   │
-│           │   └── Stewart
-    │       │                   │   │           │                       │   │
-│           │       └── Flores
-    │       │                   │   │           │                       │   │
-│           └── Murphy
-    │       │                   │   │           │                       │   │
-└── Morgan
-    │       │                   │   │           │                       │   │
-└── Peterson
-    │       │                   │   │           │                       │   │
-└── Ruiz
-    │       │                   │   │           │                       │   └──
-Kelly
-    │       │                   │   │           │                       │
-├── Gomez
-    │       │                   │   │           │                       │
-│   └── Bell
-    │       │                   │   │           │                       │
-│       └── Bailey
-    │       │                   │   │           │                       │
-│           └── Reed
-    │       │                   │   │           │                       │
-│               └── Cooper
-    │       │                   │   │           │                       │
-│                   └── Harrison
-    │       │                   │   │           │                       │
-└── Howard
-    │       │                   │   │           │                       └──
-Alvarez
-    │       │                   │   │           │                           ├──
-Wells
-    │       │                   │   │           │                           │
-└── Kennedy
-    │       │                   │   │           │                           └──
-Woods
-    │       │                   │   │           └── Mendoza
-    │       │                   │   └── Jenkins
-    │       │                   │       ├── Ortiz
-    │       │                   │       │   ├── Ross
-    │       │                   │       │   │   ├── Sanders
-    │       │                   │       │   │   │   └── Foster
-    │       │                   │       │   │   └── Morales
-    │       │                   │       │   └── Russell
-    │       │                   │       │       └── Powell
-    │       │                   │       │           └── Sullivan
-    │       │                   │       └── Gutierrez
-    │       │                   │           ├── Perry
-    │       │                   │           └── Butler
-    │       │                   └── Reynolds
-    │       └── Cole
-    └── Gonzales
-        ├── Kim
-        │   ├── Graham
-        │   │   └── Hamilton
-        │   │       └── Patterson
-        │   │           ├── Simmons
-        │   │           │   └── Coleman
-        │   │           │       └── Henderson
-        │   │           │           └── Barnes
-        │   │           │               ├── Long
-        │   │           │               │   ├── Myers
-        │   │           │               │   │   ├── Price
-        │   │           │               │   │   │   └── Hughes
-        │   │           │               │   │   │       └── Cruz
-        │   │           │               │   │   │           └── Reyes
-        │   │           │               │   │   │               ├── Brooks
-        │   │           │               │   │   │               │   ├── Ward
-        │   │           │               │   │   │               │   │   └── Cox
-        │   │           │               │   │   │               │   │       └──
-Diaz
-        │   │           │               │   │   │               │   │
-└── Richardson
-        │   │           │               │   │   │               │   │
-└── Wood
-        │   │           │               │   │   │               │   │
-└── Watson
-        │   │           │               │   │   │               │   └── Bennett
-        │   │           │               │   │   │               │       └── Gray
-        │   │           │               │   │   │               │           └──
-Stevens
-        │   │           │               │   │   │               │
-└── Murray
-        │   │           │               │   │   │               │
-└── Ford
-        │   │           │               │   │   │               │
-└── Marshall
-        │   │           │               │   │   │               │
-├── Owens
-        │   │           │               │   │   │               │
-└── Mcdonald
-        │   │           │               │   │   │               └── James
-        │   │           │               │   │   └── Ellis
-        │   │           │               │   └── Bryant
-        │   │           │               └── Fisher
-        │   │           ├── Jordan
-        │   │           └── Gibson
-        │   └── Hayes
-        │       └── Chavez
-        └── Alexander
-    \end{Verbatim}
-
-    \hypertarget{oux10diux161ux107en-dijkstrin-algoritam}{%
-\subsubsection{Očišćen Dijkstrin
-algoritam}\label{oux10diux161ux107en-dijkstrin-algoritam}}
-
-    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{45}{\boxspacing}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{for} \PY{n}{pre}\PY{p}{,} \PY{n}{fill}\PY{p}{,} \PY{n}{node} \PY{o+ow}{in} \PY{n}{RenderTree}\PY{p}{(}\PY{n}{distances\PYZus{}clean}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{src}\PY{p}{]}\PY{p}{)}\PY{p}{:}
-    \PY{n+nb}{print}\PY{p}{(}\PY{n}{pre} \PY{o}{+} \PY{n}{node}\PY{o}{.}\PY{n}{name}\PY{p}{)}
-\end{Verbatim}
-\end{tcolorbox}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-Smith
-└── Johnson
-    ├── Williams
-    │   ├── Jones
-    │   └── Ramos
-    │       └── Wallace
-    │           └── Martinez
-    │               └── Anderson
-    │                   └── Taylor
-    │                       ├── White
-    │                       │   └── Lopez
-    │                       │       └── Harris
-    │                       │           └── Clark
-    │                       │               ├── Lewis
-    │                       │               │   └── Robinson
-    │                       │               │       ├── Hall
-    │                       │               │       │   └── Sanchez
-    │                       │               │       ├── Ramirez
-    │                       │               │       │   ├── Wright
-    │                       │               │       │   │   └── King
-    │                       │               │       │   └── Torres
-    │                       │               │       └── Rogers
-    │                       │               │           ├── Rivera
-    │                       │               │           │   └── Morris
-    │                       │               │           └── Peterson
-    │                       │               └── Kelly
-    │                       │                   ├── Bell
-    │                       │                   │   └── Cooper
-    │                       │                   └── Howard
-    │                       └── Ortiz
-    │                           ├── Ross
-    │                           └── Morales
-    └── Gonzales
-        └── Patterson
-            └── Long
-                └── Cruz
-    \end{Verbatim}
-
-    \hypertarget{a-algoritam}{%
-\subsubsection{A* algoritam}\label{a-algoritam}}
-
-    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{46}{\boxspacing}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{for} \PY{n}{pre}\PY{p}{,} \PY{n}{fill}\PY{p}{,} \PY{n}{node} \PY{o+ow}{in} \PY{n}{RenderTree}\PY{p}{(}\PY{n}{distances\PYZus{}a}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{src}\PY{p}{]}\PY{p}{)}\PY{p}{:}
-    \PY{n+nb}{print}\PY{p}{(}\PY{n}{pre} \PY{o}{+} \PY{n}{node}\PY{o}{.}\PY{n}{name}\PY{p}{)}
-\end{Verbatim}
-\end{tcolorbox}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-Smith
-└── Johnson
-    ├── Williams
-    │   ├── Brown
-    │   │   └── Jones
-    │   │       └── Miller
-    │   │           ├── Davis
-    │   │           │   └── Garcia
-    │   │           │       └── Rodriguez
-    │   │           │           └── Wilson
-    │   │           └── Castillo
-    │   │               ├── Olson
-    │   │               │   └── Webb
-    │   │               │       └── Washington
-    │   │               └── Tucker
-    │   │                   └── Freeman
-    │   │                       └── Burns
-    │   │                           ├── Henry
-    │   │                           └── Vasquez
-    │   │                               ├── Snyder
-    │   │                               │   └── Simpson
-    │   │                               │       └── Crawford
-    │   │                               └── Jimenez
-    │   └── West
-    │       ├── Ramos
-    │       │   ├── Alexander
-    │       │   └── Wallace
-    │       │       └── Griffin
-    │       │           └── Martinez
-    │       │               └── Anderson
-    │       │                   ├── Taylor
-    │       │                   │   ├── Thomas
-    │       │                   │   │   └── Hernandez
-    │       │                   │   │       └── Moore
-    │       │                   │   │           ├── Martin
-    │       │                   │   │           │   ├── Jackson
-    │       │                   │   │           │   │   └── Thompson
-    │       │                   │   │           │   └── White
-    │       │                   │   │           │       └── Lopez
-    │       │                   │   │           │           └── Lee
-    │       │                   │   │           │               └── Gonzalez
-    │       │                   │   │           │                   └── Harris
-    │       │                   │   │           │                       ├──
-Clark
-    │       │                   │   │           │                       │   ├──
-Lewis
-    │       │                   │   │           │                       │   │
-└── Robinson
-    │       │                   │   │           │                       │   │
-├── Walker
-    │       │                   │   │           │                       │   │
-│   └── Perez
-    │       │                   │   │           │                       │   │
-│       └── Hall
-    │       │                   │   │           │                       │   │
-│           ├── Young
-    │       │                   │   │           │                       │   │
-│           │   └── Allen
-    │       │                   │   │           │                       │   │
-│           │       └── Sanchez
-    │       │                   │   │           │                       │   │
-│           └── Collins
-    │       │                   │   │           │                       │   │
-│               └── Parker
-    │       │                   │   │           │                       │   │
-├── Phillips
-    │       │                   │   │           │                       │   │
-│   └── Campbell
-    │       │                   │   │           │                       │   │
-│       ├── Ramirez
-    │       │                   │   │           │                       │   │
-│       │   ├── Scott
-    │       │                   │   │           │                       │   │
-│       │   │   └── Green
-    │       │                   │   │           │                       │   │
-│       │   │       ├── Baker
-    │       │                   │   │           │                       │   │
-│       │   │       │   ├── Adams
-    │       │                   │   │           │                       │   │
-│       │   │       │   └── Nelson
-    │       │                   │   │           │                       │   │
-│       │   │       └── Hill
-    │       │                   │   │           │                       │   │
-│       │   └── Evans
-    │       │                   │   │           │                       │   │
-│       │       └── Turner
-    │       │                   │   │           │                       │   │
-│       │           └── Torres
-    │       │                   │   │           │                       │   │
-│       │               └── Wright
-    │       │                   │   │           │                       │   │
-│       │                   └── King
-    │       │                   │   │           │                       │   │
-│       └── Mitchell
-    │       │                   │   │           │                       │   │
-│           ├── Roberts
-    │       │                   │   │           │                       │   │
-│           └── Carter
-    │       │                   │   │           │                       │   │
-└── Rogers
-    │       │                   │   │           │                       │   │
-├── Cook
-    │       │                   │   │           │                       │   │
-│   └── Rivera
-    │       │                   │   │           │                       │   │
-│       └── Nguyen
-    │       │                   │   │           │                       │   │
-│           ├── Morris
-    │       │                   │   │           │                       │   │
-│           │   └── Stewart
-    │       │                   │   │           │                       │   │
-│           └── Murphy
-    │       │                   │   │           │                       │   │
-└── Morgan
-    │       │                   │   │           │                       │   │
-└── Peterson
-    │       │                   │   │           │                       │   │
-└── Ruiz
-    │       │                   │   │           │                       │   └──
-Kelly
-    │       │                   │   │           │                       │
-├── Gomez
-    │       │                   │   │           │                       │
-└── Howard
-    │       │                   │   │           │                       │
-└── Bell
-    │       │                   │   │           │                       │
-└── Bailey
-    │       │                   │   │           │                       │
-└── Reed
-    │       │                   │   │           │                       │
-└── Cooper
-    │       │                   │   │           │                       │
-└── Harrison
-    │       │                   │   │           │                       └──
-Alvarez
-    │       │                   │   │           │                           ├──
-Wells
-    │       │                   │   │           │                           │
-└── Kennedy
-    │       │                   │   │           │                           └──
-Woods
-    │       │                   │   │           └── Mendoza
-    │       │                   │   └── Jenkins
-    │       │                   │       ├── Ortiz
-    │       │                   │       │   ├── Ross
-    │       │                   │       │   │   └── Sanders
-    │       │                   │       │   │       └── Foster
-    │       │                   │       │   └── Russell
-    │       │                   │       │       └── Powell
-    │       │                   │       │           ├── Morales
-    │       │                   │       │           └── Sullivan
-    │       │                   │       └── Gutierrez
-    │       │                   │           ├── Perry
-    │       │                   │           └── Butler
-    │       │                   └── Reynolds
-    │       └── Cole
-    └── Gonzales
-        └── Kim
-            ├── Graham
-            │   └── Hamilton
-            │       └── Patterson
-            │           ├── Simmons
-            │           │   └── Coleman
-            │           │       └── Henderson
-            │           │           └── Barnes
-            │           │               ├── Long
-            │           │               │   ├── Myers
-            │           │               │   │   ├── Price
-            │           │               │   │   │   └── Hughes
-            │           │               │   │   │       └── Cruz
-            │           │               │   │   │           └── Reyes
-            │           │               │   │   │               ├── Brooks
-            │           │               │   │   │               │   ├── Ward
-            │           │               │   │   │               │   │   └── Cox
-            │           │               │   │   │               │   │       └──
-Diaz
-            │           │               │   │   │               │   │
-└── Richardson
-            │           │               │   │   │               │   │
-└── Wood
-            │           │               │   │   │               │   │
-└── Watson
-            │           │               │   │   │               │   └── Bennett
-            │           │               │   │   │               │       └── Gray
-            │           │               │   │   │               │           └──
-Stevens
-            │           │               │   │   │               │
-└── Murray
-            │           │               │   │   │               │
-└── Ford
-            │           │               │   │   │               │
-└── Marshall
-            │           │               │   │   │               │
-├── Owens
-            │           │               │   │   │               │
-└── Mcdonald
-            │           │               │   │   │               └── James
-            │           │               │   │   └── Ellis
-            │           │               │   └── Bryant
-            │           │               └── Fisher
-            │           ├── Jordan
-            │           └── Gibson
-            └── Hayes
-                └── Chavez
-    \end{Verbatim}
-
-    \hypertarget{a-algoritam-s-pretjeranom-heuristikom}{%
-\subsubsection{A* algoritam s pretjeranom
-heuristikom}\label{a-algoritam-s-pretjeranom-heuristikom}}
-
-    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{47}{\boxspacing}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{for} \PY{n}{pre}\PY{p}{,} \PY{n}{fill}\PY{p}{,} \PY{n}{node} \PY{o+ow}{in} \PY{n}{RenderTree}\PY{p}{(}\PY{n}{distances\PYZus{}a\PYZus{}pow}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{src}\PY{p}{]}\PY{p}{)}\PY{p}{:}
-    \PY{n+nb}{print}\PY{p}{(}\PY{n}{pre} \PY{o}{+} \PY{n}{node}\PY{o}{.}\PY{n}{name}\PY{p}{)}
-\end{Verbatim}
-\end{tcolorbox}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-Smith
-└── Johnson
-    ├── Williams
-    │   ├── Brown
-    │   │   └── Jones
-    │   │       └── Miller
-    │   │           ├── Davis
-    │   │           │   ├── Garcia
-    │   │           │   │   └── Rodriguez
-    │   │           │   │       └── Wilson
-    │   │           │   └── Martinez
-    │   │           │       └── Anderson
-    │   │           │           ├── Taylor
-    │   │           │           │   ├── Thomas
-    │   │           │           │   │   └── Hernandez
-    │   │           │           │   │       └── Moore
-    │   │           │           │   │           ├── Martin
-    │   │           │           │   │           │   ├── Jackson
-    │   │           │           │   │           │   │   └── Thompson
-    │   │           │           │   │           │   └── White
-    │   │           │           │   │           │       └── Lopez
-    │   │           │           │   │           │           ├── Lee
-    │   │           │           │   │           │           │   └── Gonzalez
-    │   │           │           │   │           │           │       └── Harris
-    │   │           │           │   │           │           │           ├──
-Clark
-    │   │           │           │   │           │           │           │   ├──
-Lewis
-    │   │           │           │   │           │           │           │   │
-└── Robinson
-    │   │           │           │   │           │           │           │   │
-├── Walker
-    │   │           │           │   │           │           │           │   │
-│   └── Perez
-    │   │           │           │   │           │           │           │   │
-│       └── Hall
-    │   │           │           │   │           │           │           │   │
-│           ├── Young
-    │   │           │           │   │           │           │           │   │
-│           │   └── Allen
-    │   │           │           │   │           │           │           │   │
-│           │       └── Sanchez
-    │   │           │           │   │           │           │           │   │
-│           └── Collins
-    │   │           │           │   │           │           │           │   │
-├── Phillips
-    │   │           │           │   │           │           │           │   │
-│   └── Campbell
-    │   │           │           │   │           │           │           │   │
-│       ├── Ramirez
-    │   │           │           │   │           │           │           │   │
-│       │   ├── Scott
-    │   │           │           │   │           │           │           │   │
-│       │   │   └── Green
-    │   │           │           │   │           │           │           │   │
-│       │   │       ├── Baker
-    │   │           │           │   │           │           │           │   │
-│       │   │       │   ├── Adams
-    │   │           │           │   │           │           │           │   │
-│       │   │       │   └── Nelson
-    │   │           │           │   │           │           │           │   │
-│       │   │       └── Hill
-    │   │           │           │   │           │           │           │   │
-│       │   └── Evans
-    │   │           │           │   │           │           │           │   │
-│       │       └── Turner
-    │   │           │           │   │           │           │           │   │
-│       │           └── Torres
-    │   │           │           │   │           │           │           │   │
-│       │               ├── Wright
-    │   │           │           │   │           │           │           │   │
-│       │               │   └── King
-    │   │           │           │   │           │           │           │   │
-│       │               └── Parker
-    │   │           │           │   │           │           │           │   │
-│       └── Mitchell
-    │   │           │           │   │           │           │           │   │
-│           ├── Roberts
-    │   │           │           │   │           │           │           │   │
-│           └── Carter
-    │   │           │           │   │           │           │           │   │
-└── Rogers
-    │   │           │           │   │           │           │           │   │
-├── Cook
-    │   │           │           │   │           │           │           │   │
-│   └── Rivera
-    │   │           │           │   │           │           │           │   │
-│       └── Nguyen
-    │   │           │           │   │           │           │           │   │
-│           ├── Morris
-    │   │           │           │   │           │           │           │   │
-│           │   └── Stewart
-    │   │           │           │   │           │           │           │   │
-│           └── Murphy
-    │   │           │           │   │           │           │           │   │
-└── Morgan
-    │   │           │           │   │           │           │           │   │
-└── Peterson
-    │   │           │           │   │           │           │           │   │
-└── Ruiz
-    │   │           │           │   │           │           │           │   └──
-Kelly
-    │   │           │           │   │           │           │           │
-└── Gomez
-    │   │           │           │   │           │           │           └──
-Alvarez
-    │   │           │           │   │           │           │               ├──
-Wells
-    │   │           │           │   │           │           │               │
-└── Kennedy
-    │   │           │           │   │           │           │               └──
-Woods
-    │   │           │           │   │           │           └── Cruz
-    │   │           │           │   │           │               ├── Reyes
-    │   │           │           │   │           │               │   ├── Brooks
-    │   │           │           │   │           │               │   │   ├── Ward
-    │   │           │           │   │           │               │   │   │   ├──
-Howard
-    │   │           │           │   │           │               │   │   │   │
-└── Bell
-    │   │           │           │   │           │               │   │   │   │
-└── Bailey
-    │   │           │           │   │           │               │   │   │   │
-└── Reed
-    │   │           │           │   │           │               │   │   │   │
-└── Cooper
-    │   │           │           │   │           │               │   │   │   │
-└── Harrison
-    │   │           │           │   │           │               │   │   │   └──
-Cox
-    │   │           │           │   │           │               │   │   │
-└── Diaz
-    │   │           │           │   │           │               │   │   │
-└── Richardson
-    │   │           │           │   │           │               │   │   │
-└── Wood
-    │   │           │           │   │           │               │   │   │
-└── Watson
-    │   │           │           │   │           │               │   │   └──
-Bennett
-    │   │           │           │   │           │               │   └── James
-    │   │           │           │   │           │               │       └── Gray
-    │   │           │           │   │           │               │           └──
-Stevens
-    │   │           │           │   │           │               │
-└── Murray
-    │   │           │           │   │           │               │
-└── Ford
-    │   │           │           │   │           │               │
-└── Marshall
-    │   │           │           │   │           │               │
-├── Owens
-    │   │           │           │   │           │               │
-└── Mcdonald
-    │   │           │           │   │           │               └── Hughes
-    │   │           │           │   │           │                   └── Price
-    │   │           │           │   │           └── Mendoza
-    │   │           │           │   └── Jenkins
-    │   │           │           │       ├── Ortiz
-    │   │           │           │       │   ├── Ross
-    │   │           │           │       │   │   └── Sanders
-    │   │           │           │       │   │       └── Foster
-    │   │           │           │       │   └── Russell
-    │   │           │           │       │       └── Powell
-    │   │           │           │       │           ├── Morales
-    │   │           │           │       │           └── Sullivan
-    │   │           │           │       └── Gutierrez
-    │   │           │           │           ├── Perry
-    │   │           │           │           └── Butler
-    │   │           │           └── Reynolds
-    │   │           │               └── Jordan
-    │   │           └── Castillo
-    │   │               ├── Olson
-    │   │               │   └── Webb
-    │   │               │       └── Washington
-    │   │               └── Tucker
-    │   │                   └── Freeman
-    │   │                       └── Burns
-    │   │                           ├── Henry
-    │   │                           └── Vasquez
-    │   │                               ├── Snyder
-    │   │                               │   └── Simpson
-    │   │                               │       └── Crawford
-    │   │                               └── Jimenez
-    │   └── West
-    │       ├── Ramos
-    │       │   ├── Alexander
-    │       │   └── Wallace
-    │       │       └── Griffin
-    │       └── Cole
-    └── Gonzales
-        └── Kim
-            ├── Graham
-            │   └── Hamilton
-            │       ├── Patterson
-            │       │   ├── Simmons
-            │       │   │   └── Coleman
-            │       │   │       └── Henderson
-            │       │   │           └── Barnes
-            │       │   │               ├── Long
-            │       │   │               │   ├── Myers
-            │       │   │               │   │   └── Ellis
-            │       │   │               │   └── Bryant
-            │       │   │               └── Fisher
-            │       │   └── Gibson
-            │       └── Chavez
-            └── Hayes
-    \end{Verbatim}
-
-
-    % Add a bibliography block to the postdoc
-    
-    
+%
+%    \begin{Verbatim}[commandchars=\\\{\}]
+%Smith
+%└── Johnson
+%    ├── Williams
+%    │   ├── Brown
+%    │   │   └── Jones
+%    │   │       └── Miller
+%    │   │           ├── Davis
+%    │   │           │   └── Garcia
+%    │   │           │       └── Rodriguez
+%    │   │           │           └── Wilson
+%    │   │           └── Castillo
+%    │   │               ├── Olson
+%    │   │               │   └── Webb
+%    │   │               │       └── Washington
+%    │   │               └── Tucker
+%    │   │                   └── Freeman
+%    │   │                       └── Burns
+%    │   │                           ├── Henry
+%    │   │                           └── Vasquez
+%    │   │                               ├── Snyder
+%    │   │                               │   └── Simpson
+%    │   │                               │       └── Crawford
+%    │   │                               └── Jimenez
+%    │   └── West
+%    │       ├── Ramos
+%    │       │   └── Wallace
+%    │       │       └── Griffin
+%    │       │           └── Martinez
+%    │       │               └── Anderson
+%    │       │                   ├── Taylor
+%    │       │                   │   ├── Thomas
+%    │       │                   │   │   └── Hernandez
+%    │       │                   │   │       └── Moore
+%    │       │                   │   │           ├── Martin
+%    │       │                   │   │           │   ├── Jackson
+%    │       │                   │   │           │   │   └── Thompson
+%    │       │                   │   │           │   └── White
+%    │       │                   │   │           │       └── Lopez
+%    │       │                   │   │           │           └── Lee
+%    │       │                   │   │           │               └── Gonzalez
+%    │       │                   │   │           │                   └── Harris
+%    │       │                   │   │           │                       ├──
+%Clark
+%    │       │                   │   │           │                       │   ├──
+%Lewis
+%    │       │                   │   │           │                       │   │
+%└── Robinson
+%    │       │                   │   │           │                       │   │
+%├── Walker
+%    │       │                   │   │           │                       │   │
+%│   └── Perez
+%    │       │                   │   │           │                       │   │
+%│       └── Hall
+%    │       │                   │   │           │                       │   │
+%│           ├── Young
+%    │       │                   │   │           │                       │   │
+%│           │   └── Allen
+%    │       │                   │   │           │                       │   │
+%│           │       └── Sanchez
+%    │       │                   │   │           │                       │   │
+%│           │           └── Edwards
+%    │       │                   │   │           │                       │   │
+%│           └── Collins
+%    │       │                   │   │           │                       │   │
+%├── Phillips
+%    │       │                   │   │           │                       │   │
+%│   └── Campbell
+%    │       │                   │   │           │                       │   │
+%│       ├── Ramirez
+%    │       │                   │   │           │                       │   │
+%│       │   ├── Scott
+%    │       │                   │   │           │                       │   │
+%│       │   │   ├── Wright
+%    │       │                   │   │           │                       │   │
+%│       │   │   │   └── King
+%    │       │                   │   │           │                       │   │
+%│       │   │   └── Green
+%    │       │                   │   │           │                       │   │
+%│       │   │       ├── Baker
+%    │       │                   │   │           │                       │   │
+%│       │   │       │   ├── Adams
+%    │       │                   │   │           │                       │   │
+%│       │   │       │   └── Nelson
+%    │       │                   │   │           │                       │   │
+%│       │   │       └── Hill
+%    │       │                   │   │           │                       │   │
+%│       │   └── Evans
+%    │       │                   │   │           │                       │   │
+%│       │       └── Turner
+%    │       │                   │   │           │                       │   │
+%│       │           └── Torres
+%    │       │                   │   │           │                       │   │
+%│       │               └── Parker
+%    │       │                   │   │           │                       │   │
+%│       └── Mitchell
+%    │       │                   │   │           │                       │   │
+%│           ├── Roberts
+%    │       │                   │   │           │                       │   │
+%│           └── Carter
+%    │       │                   │   │           │                       │   │
+%└── Rogers
+%    │       │                   │   │           │                       │   │
+%├── Cook
+%    │       │                   │   │           │                       │   │
+%│   └── Rivera
+%    │       │                   │   │           │                       │   │
+%│       └── Nguyen
+%    │       │                   │   │           │                       │   │
+%│           ├── Morris
+%    │       │                   │   │           │                       │   │
+%│           │   └── Stewart
+%    │       │                   │   │           │                       │   │
+%│           │       └── Flores
+%    │       │                   │   │           │                       │   │
+%│           └── Murphy
+%    │       │                   │   │           │                       │   │
+%└── Morgan
+%    │       │                   │   │           │                       │   │
+%└── Peterson
+%    │       │                   │   │           │                       │   │
+%└── Ruiz
+%    │       │                   │   │           │                       │   └──
+%Kelly
+%    │       │                   │   │           │                       │
+%├── Gomez
+%    │       │                   │   │           │                       │
+%│   └── Bell
+%    │       │                   │   │           │                       │
+%│       └── Bailey
+%    │       │                   │   │           │                       │
+%│           └── Reed
+%    │       │                   │   │           │                       │
+%│               └── Cooper
+%    │       │                   │   │           │                       │
+%│                   └── Harrison
+%    │       │                   │   │           │                       │
+%└── Howard
+%    │       │                   │   │           │                       └──
+%Alvarez
+%    │       │                   │   │           │                           ├──
+%Wells
+%    │       │                   │   │           │                           │
+%└── Kennedy
+%    │       │                   │   │           │                           └──
+%Woods
+%    │       │                   │   │           └── Mendoza
+%    │       │                   │   └── Jenkins
+%    │       │                   │       ├── Ortiz
+%    │       │                   │       │   ├── Ross
+%    │       │                   │       │   │   ├── Sanders
+%    │       │                   │       │   │   │   └── Foster
+%    │       │                   │       │   │   └── Morales
+%    │       │                   │       │   └── Russell
+%    │       │                   │       │       └── Powell
+%    │       │                   │       │           └── Sullivan
+%    │       │                   │       └── Gutierrez
+%    │       │                   │           ├── Perry
+%    │       │                   │           └── Butler
+%    │       │                   └── Reynolds
+%    │       └── Cole
+%    └── Gonzales
+%        ├── Kim
+%        │   ├── Graham
+%        │   │   └── Hamilton
+%        │   │       └── Patterson
+%        │   │           ├── Simmons
+%        │   │           │   └── Coleman
+%        │   │           │       └── Henderson
+%        │   │           │           └── Barnes
+%        │   │           │               ├── Long
+%        │   │           │               │   ├── Myers
+%        │   │           │               │   │   ├── Price
+%        │   │           │               │   │   │   └── Hughes
+%        │   │           │               │   │   │       └── Cruz
+%        │   │           │               │   │   │           └── Reyes
+%        │   │           │               │   │   │               ├── Brooks
+%        │   │           │               │   │   │               │   ├── Ward
+%        │   │           │               │   │   │               │   │   └── Cox
+%        │   │           │               │   │   │               │   │       └──
+%Diaz
+%        │   │           │               │   │   │               │   │
+%└── Richardson
+%        │   │           │               │   │   │               │   │
+%└── Wood
+%        │   │           │               │   │   │               │   │
+%└── Watson
+%        │   │           │               │   │   │               │   └── Bennett
+%        │   │           │               │   │   │               │       └── Gray
+%        │   │           │               │   │   │               │           └──
+%Stevens
+%        │   │           │               │   │   │               │
+%└── Murray
+%        │   │           │               │   │   │               │
+%└── Ford
+%        │   │           │               │   │   │               │
+%└── Marshall
+%        │   │           │               │   │   │               │
+%├── Owens
+%        │   │           │               │   │   │               │
+%└── Mcdonald
+%        │   │           │               │   │   │               └── James
+%        │   │           │               │   │   └── Ellis
+%        │   │           │               │   └── Bryant
+%        │   │           │               └── Fisher
+%        │   │           ├── Jordan
+%        │   │           └── Gibson
+%        │   └── Hayes
+%        │       └── Chavez
+%        └── Alexander
+%    \end{Verbatim}
+%
+%    \hypertarget{oux10diux161ux107en-dijkstrin-algoritam}{%
+%\subsubsection{Očišćen Dijkstrin
+%algoritam}\label{oux10diux161ux107en-dijkstrin-algoritam}}
+%
+%    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+%\prompt{In}{incolor}{45}{\boxspacing}
+%\begin{Verbatim}[commandchars=\\\{\}]
+%\PY{k}{for} \PY{n}{pre}\PY{p}{,} \PY{n}{fill}\PY{p}{,} \PY{n}{node} \PY{o+ow}{in} \PY{n}{RenderTree}\PY{p}{(}\PY{n}{distances\PYZus{}clean}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{src}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+%    \PY{n+nb}{print}\PY{p}{(}\PY{n}{pre} \PY{o}{+} \PY{n}{node}\PY{o}{.}\PY{n}{name}\PY{p}{)}
+%\end{Verbatim}
+%\end{tcolorbox}
+%
+%    \begin{Verbatim}[commandchars=\\\{\}]
+%Smith
+%└── Johnson
+%    ├── Williams
+%    │   ├── Jones
+%    │   └── Ramos
+%    │       └── Wallace
+%    │           └── Martinez
+%    │               └── Anderson
+%    │                   └── Taylor
+%    │                       ├── White
+%    │                       │   └── Lopez
+%    │                       │       └── Harris
+%    │                       │           └── Clark
+%    │                       │               ├── Lewis
+%    │                       │               │   └── Robinson
+%    │                       │               │       ├── Hall
+%    │                       │               │       │   └── Sanchez
+%    │                       │               │       ├── Ramirez
+%    │                       │               │       │   ├── Wright
+%    │                       │               │       │   │   └── King
+%    │                       │               │       │   └── Torres
+%    │                       │               │       └── Rogers
+%    │                       │               │           ├── Rivera
+%    │                       │               │           │   └── Morris
+%    │                       │               │           └── Peterson
+%    │                       │               └── Kelly
+%    │                       │                   ├── Bell
+%    │                       │                   │   └── Cooper
+%    │                       │                   └── Howard
+%    │                       └── Ortiz
+%    │                           ├── Ross
+%    │                           └── Morales
+%    └── Gonzales
+%        └── Patterson
+%            └── Long
+%                └── Cruz
+%    \end{Verbatim}
+%
+%    \hypertarget{a-algoritam}{%
+%\subsubsection{A* algoritam}\label{a-algoritam}}
+%
+%    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+%\prompt{In}{incolor}{46}{\boxspacing}
+%\begin{Verbatim}[commandchars=\\\{\}]
+%\PY{k}{for} \PY{n}{pre}\PY{p}{,} \PY{n}{fill}\PY{p}{,} \PY{n}{node} \PY{o+ow}{in} \PY{n}{RenderTree}\PY{p}{(}\PY{n}{distances\PYZus{}a}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{src}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+%    \PY{n+nb}{print}\PY{p}{(}\PY{n}{pre} \PY{o}{+} \PY{n}{node}\PY{o}{.}\PY{n}{name}\PY{p}{)}
+%\end{Verbatim}
+%\end{tcolorbox}
+%
+%    \begin{Verbatim}[commandchars=\\\{\}]
+%Smith
+%└── Johnson
+%    ├── Williams
+%    │   ├── Brown
+%    │   │   └── Jones
+%    │   │       └── Miller
+%    │   │           ├── Davis
+%    │   │           │   └── Garcia
+%    │   │           │       └── Rodriguez
+%    │   │           │           └── Wilson
+%    │   │           └── Castillo
+%    │   │               ├── Olson
+%    │   │               │   └── Webb
+%    │   │               │       └── Washington
+%    │   │               └── Tucker
+%    │   │                   └── Freeman
+%    │   │                       └── Burns
+%    │   │                           ├── Henry
+%    │   │                           └── Vasquez
+%    │   │                               ├── Snyder
+%    │   │                               │   └── Simpson
+%    │   │                               │       └── Crawford
+%    │   │                               └── Jimenez
+%    │   └── West
+%    │       ├── Ramos
+%    │       │   ├── Alexander
+%    │       │   └── Wallace
+%    │       │       └── Griffin
+%    │       │           └── Martinez
+%    │       │               └── Anderson
+%    │       │                   ├── Taylor
+%    │       │                   │   ├── Thomas
+%    │       │                   │   │   └── Hernandez
+%    │       │                   │   │       └── Moore
+%    │       │                   │   │           ├── Martin
+%    │       │                   │   │           │   ├── Jackson
+%    │       │                   │   │           │   │   └── Thompson
+%    │       │                   │   │           │   └── White
+%    │       │                   │   │           │       └── Lopez
+%    │       │                   │   │           │           └── Lee
+%    │       │                   │   │           │               └── Gonzalez
+%    │       │                   │   │           │                   └── Harris
+%    │       │                   │   │           │                       ├──
+%Clark
+%    │       │                   │   │           │                       │   ├──
+%Lewis
+%    │       │                   │   │           │                       │   │
+%└── Robinson
+%    │       │                   │   │           │                       │   │
+%├── Walker
+%    │       │                   │   │           │                       │   │
+%│   └── Perez
+%    │       │                   │   │           │                       │   │
+%│       └── Hall
+%    │       │                   │   │           │                       │   │
+%│           ├── Young
+%    │       │                   │   │           │                       │   │
+%│           │   └── Allen
+%    │       │                   │   │           │                       │   │
+%│           │       └── Sanchez
+%    │       │                   │   │           │                       │   │
+%│           └── Collins
+%    │       │                   │   │           │                       │   │
+%│               └── Parker
+%    │       │                   │   │           │                       │   │
+%├── Phillips
+%    │       │                   │   │           │                       │   │
+%│   └── Campbell
+%    │       │                   │   │           │                       │   │
+%│       ├── Ramirez
+%    │       │                   │   │           │                       │   │
+%│       │   ├── Scott
+%    │       │                   │   │           │                       │   │
+%│       │   │   └── Green
+%    │       │                   │   │           │                       │   │
+%│       │   │       ├── Baker
+%    │       │                   │   │           │                       │   │
+%│       │   │       │   ├── Adams
+%    │       │                   │   │           │                       │   │
+%│       │   │       │   └── Nelson
+%    │       │                   │   │           │                       │   │
+%│       │   │       └── Hill
+%    │       │                   │   │           │                       │   │
+%│       │   └── Evans
+%    │       │                   │   │           │                       │   │
+%│       │       └── Turner
+%    │       │                   │   │           │                       │   │
+%│       │           └── Torres
+%    │       │                   │   │           │                       │   │
+%│       │               └── Wright
+%    │       │                   │   │           │                       │   │
+%│       │                   └── King
+%    │       │                   │   │           │                       │   │
+%│       └── Mitchell
+%    │       │                   │   │           │                       │   │
+%│           ├── Roberts
+%    │       │                   │   │           │                       │   │
+%│           └── Carter
+%    │       │                   │   │           │                       │   │
+%└── Rogers
+%    │       │                   │   │           │                       │   │
+%├── Cook
+%    │       │                   │   │           │                       │   │
+%│   └── Rivera
+%    │       │                   │   │           │                       │   │
+%│       └── Nguyen
+%    │       │                   │   │           │                       │   │
+%│           ├── Morris
+%    │       │                   │   │           │                       │   │
+%│           │   └── Stewart
+%    │       │                   │   │           │                       │   │
+%│           └── Murphy
+%    │       │                   │   │           │                       │   │
+%└── Morgan
+%    │       │                   │   │           │                       │   │
+%└── Peterson
+%    │       │                   │   │           │                       │   │
+%└── Ruiz
+%    │       │                   │   │           │                       │   └──
+%Kelly
+%    │       │                   │   │           │                       │
+%├── Gomez
+%    │       │                   │   │           │                       │
+%└── Howard
+%    │       │                   │   │           │                       │
+%└── Bell
+%    │       │                   │   │           │                       │
+%└── Bailey
+%    │       │                   │   │           │                       │
+%└── Reed
+%    │       │                   │   │           │                       │
+%└── Cooper
+%    │       │                   │   │           │                       │
+%└── Harrison
+%    │       │                   │   │           │                       └──
+%Alvarez
+%    │       │                   │   │           │                           ├──
+%Wells
+%    │       │                   │   │           │                           │
+%└── Kennedy
+%    │       │                   │   │           │                           └──
+%Woods
+%    │       │                   │   │           └── Mendoza
+%    │       │                   │   └── Jenkins
+%    │       │                   │       ├── Ortiz
+%    │       │                   │       │   ├── Ross
+%    │       │                   │       │   │   └── Sanders
+%    │       │                   │       │   │       └── Foster
+%    │       │                   │       │   └── Russell
+%    │       │                   │       │       └── Powell
+%    │       │                   │       │           ├── Morales
+%    │       │                   │       │           └── Sullivan
+%    │       │                   │       └── Gutierrez
+%    │       │                   │           ├── Perry
+%    │       │                   │           └── Butler
+%    │       │                   └── Reynolds
+%    │       └── Cole
+%    └── Gonzales
+%        └── Kim
+%            ├── Graham
+%            │   └── Hamilton
+%            │       └── Patterson
+%            │           ├── Simmons
+%            │           │   └── Coleman
+%            │           │       └── Henderson
+%            │           │           └── Barnes
+%            │           │               ├── Long
+%            │           │               │   ├── Myers
+%            │           │               │   │   ├── Price
+%            │           │               │   │   │   └── Hughes
+%            │           │               │   │   │       └── Cruz
+%            │           │               │   │   │           └── Reyes
+%            │           │               │   │   │               ├── Brooks
+%            │           │               │   │   │               │   ├── Ward
+%            │           │               │   │   │               │   │   └── Cox
+%            │           │               │   │   │               │   │       └──
+%Diaz
+%            │           │               │   │   │               │   │
+%└── Richardson
+%            │           │               │   │   │               │   │
+%└── Wood
+%            │           │               │   │   │               │   │
+%└── Watson
+%            │           │               │   │   │               │   └── Bennett
+%            │           │               │   │   │               │       └── Gray
+%            │           │               │   │   │               │           └──
+%Stevens
+%            │           │               │   │   │               │
+%└── Murray
+%            │           │               │   │   │               │
+%└── Ford
+%            │           │               │   │   │               │
+%└── Marshall
+%            │           │               │   │   │               │
+%├── Owens
+%            │           │               │   │   │               │
+%└── Mcdonald
+%            │           │               │   │   │               └── James
+%            │           │               │   │   └── Ellis
+%            │           │               │   └── Bryant
+%            │           │               └── Fisher
+%            │           ├── Jordan
+%            │           └── Gibson
+%            └── Hayes
+%                └── Chavez
+%    \end{Verbatim}
+%
+%    \hypertarget{a-algoritam-s-pretjeranom-heuristikom}{%
+%\subsubsection{A* algoritam s pretjeranom
+%heuristikom}\label{a-algoritam-s-pretjeranom-heuristikom}}
+%
+%    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+%\prompt{In}{incolor}{47}{\boxspacing}
+%\begin{Verbatim}[commandchars=\\\{\}]
+%\PY{k}{for} \PY{n}{pre}\PY{p}{,} \PY{n}{fill}\PY{p}{,} \PY{n}{node} \PY{o+ow}{in} \PY{n}{RenderTree}\PY{p}{(}\PY{n}{distances\PYZus{}a\PYZus{}pow}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{src}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+%    \PY{n+nb}{print}\PY{p}{(}\PY{n}{pre} \PY{o}{+} \PY{n}{node}\PY{o}{.}\PY{n}{name}\PY{p}{)}
+%\end{Verbatim}
+%\end{tcolorbox}
+%
+%    \begin{Verbatim}[commandchars=\\\{\}]
+%Smith
+%└── Johnson
+%    ├── Williams
+%    │   ├── Brown
+%    │   │   └── Jones
+%    │   │       └── Miller
+%    │   │           ├── Davis
+%    │   │           │   ├── Garcia
+%    │   │           │   │   └── Rodriguez
+%    │   │           │   │       └── Wilson
+%    │   │           │   └── Martinez
+%    │   │           │       └── Anderson
+%    │   │           │           ├── Taylor
+%    │   │           │           │   ├── Thomas
+%    │   │           │           │   │   └── Hernandez
+%    │   │           │           │   │       └── Moore
+%    │   │           │           │   │           ├── Martin
+%    │   │           │           │   │           │   ├── Jackson
+%    │   │           │           │   │           │   │   └── Thompson
+%    │   │           │           │   │           │   └── White
+%    │   │           │           │   │           │       └── Lopez
+%    │   │           │           │   │           │           ├── Lee
+%    │   │           │           │   │           │           │   └── Gonzalez
+%    │   │           │           │   │           │           │       └── Harris
+%    │   │           │           │   │           │           │           ├──
+%Clark
+%    │   │           │           │   │           │           │           │   ├──
+%Lewis
+%    │   │           │           │   │           │           │           │   │
+%└── Robinson
+%    │   │           │           │   │           │           │           │   │
+%├── Walker
+%    │   │           │           │   │           │           │           │   │
+%│   └── Perez
+%    │   │           │           │   │           │           │           │   │
+%│       └── Hall
+%    │   │           │           │   │           │           │           │   │
+%│           ├── Young
+%    │   │           │           │   │           │           │           │   │
+%│           │   └── Allen
+%    │   │           │           │   │           │           │           │   │
+%│           │       └── Sanchez
+%    │   │           │           │   │           │           │           │   │
+%│           └── Collins
+%    │   │           │           │   │           │           │           │   │
+%├── Phillips
+%    │   │           │           │   │           │           │           │   │
+%│   └── Campbell
+%    │   │           │           │   │           │           │           │   │
+%│       ├── Ramirez
+%    │   │           │           │   │           │           │           │   │
+%│       │   ├── Scott
+%    │   │           │           │   │           │           │           │   │
+%│       │   │   └── Green
+%    │   │           │           │   │           │           │           │   │
+%│       │   │       ├── Baker
+%    │   │           │           │   │           │           │           │   │
+%│       │   │       │   ├── Adams
+%    │   │           │           │   │           │           │           │   │
+%│       │   │       │   └── Nelson
+%    │   │           │           │   │           │           │           │   │
+%│       │   │       └── Hill
+%    │   │           │           │   │           │           │           │   │
+%│       │   └── Evans
+%    │   │           │           │   │           │           │           │   │
+%│       │       └── Turner
+%    │   │           │           │   │           │           │           │   │
+%│       │           └── Torres
+%    │   │           │           │   │           │           │           │   │
+%│       │               ├── Wright
+%    │   │           │           │   │           │           │           │   │
+%│       │               │   └── King
+%    │   │           │           │   │           │           │           │   │
+%│       │               └── Parker
+%    │   │           │           │   │           │           │           │   │
+%│       └── Mitchell
+%    │   │           │           │   │           │           │           │   │
+%│           ├── Roberts
+%    │   │           │           │   │           │           │           │   │
+%│           └── Carter
+%    │   │           │           │   │           │           │           │   │
+%└── Rogers
+%    │   │           │           │   │           │           │           │   │
+%├── Cook
+%    │   │           │           │   │           │           │           │   │
+%│   └── Rivera
+%    │   │           │           │   │           │           │           │   │
+%│       └── Nguyen
+%    │   │           │           │   │           │           │           │   │
+%│           ├── Morris
+%    │   │           │           │   │           │           │           │   │
+%│           │   └── Stewart
+%    │   │           │           │   │           │           │           │   │
+%│           └── Murphy
+%    │   │           │           │   │           │           │           │   │
+%└── Morgan
+%    │   │           │           │   │           │           │           │   │
+%└── Peterson
+%    │   │           │           │   │           │           │           │   │
+%└── Ruiz
+%    │   │           │           │   │           │           │           │   └──
+%Kelly
+%    │   │           │           │   │           │           │           │
+%└── Gomez
+%    │   │           │           │   │           │           │           └──
+%Alvarez
+%    │   │           │           │   │           │           │               ├──
+%Wells
+%    │   │           │           │   │           │           │               │
+%└── Kennedy
+%    │   │           │           │   │           │           │               └──
+%Woods
+%    │   │           │           │   │           │           └── Cruz
+%    │   │           │           │   │           │               ├── Reyes
+%    │   │           │           │   │           │               │   ├── Brooks
+%    │   │           │           │   │           │               │   │   ├── Ward
+%    │   │           │           │   │           │               │   │   │   ├──
+%Howard
+%    │   │           │           │   │           │               │   │   │   │
+%└── Bell
+%    │   │           │           │   │           │               │   │   │   │
+%└── Bailey
+%    │   │           │           │   │           │               │   │   │   │
+%└── Reed
+%    │   │           │           │   │           │               │   │   │   │
+%└── Cooper
+%    │   │           │           │   │           │               │   │   │   │
+%└── Harrison
+%    │   │           │           │   │           │               │   │   │   └──
+%Cox
+%    │   │           │           │   │           │               │   │   │
+%└── Diaz
+%    │   │           │           │   │           │               │   │   │
+%└── Richardson
+%    │   │           │           │   │           │               │   │   │
+%└── Wood
+%    │   │           │           │   │           │               │   │   │
+%└── Watson
+%    │   │           │           │   │           │               │   │   └──
+%Bennett
+%    │   │           │           │   │           │               │   └── James
+%    │   │           │           │   │           │               │       └── Gray
+%    │   │           │           │   │           │               │           └──
+%Stevens
+%    │   │           │           │   │           │               │
+%└── Murray
+%    │   │           │           │   │           │               │
+%└── Ford
+%    │   │           │           │   │           │               │
+%└── Marshall
+%    │   │           │           │   │           │               │
+%├── Owens
+%    │   │           │           │   │           │               │
+%└── Mcdonald
+%    │   │           │           │   │           │               └── Hughes
+%    │   │           │           │   │           │                   └── Price
+%    │   │           │           │   │           └── Mendoza
+%    │   │           │           │   └── Jenkins
+%    │   │           │           │       ├── Ortiz
+%    │   │           │           │       │   ├── Ross
+%    │   │           │           │       │   │   └── Sanders
+%    │   │           │           │       │   │       └── Foster
+%    │   │           │           │       │   └── Russell
+%    │   │           │           │       │       └── Powell
+%    │   │           │           │       │           ├── Morales
+%    │   │           │           │       │           └── Sullivan
+%    │   │           │           │       └── Gutierrez
+%    │   │           │           │           ├── Perry
+%    │   │           │           │           └── Butler
+%    │   │           │           └── Reynolds
+%    │   │           │               └── Jordan
+%    │   │           └── Castillo
+%    │   │               ├── Olson
+%    │   │               │   └── Webb
+%    │   │               │       └── Washington
+%    │   │               └── Tucker
+%    │   │                   └── Freeman
+%    │   │                       └── Burns
+%    │   │                           ├── Henry
+%    │   │                           └── Vasquez
+%    │   │                               ├── Snyder
+%    │   │                               │   └── Simpson
+%    │   │                               │       └── Crawford
+%    │   │                               └── Jimenez
+%    │   └── West
+%    │       ├── Ramos
+%    │       │   ├── Alexander
+%    │       │   └── Wallace
+%    │       │       └── Griffin
+%    │       └── Cole
+%    └── Gonzales
+%        └── Kim
+%            ├── Graham
+%            │   └── Hamilton
+%            │       ├── Patterson
+%            │       │   ├── Simmons
+%            │       │   │   └── Coleman
+%            │       │   │       └── Henderson
+%            │       │   │           └── Barnes
+%            │       │   │               ├── Long
+%            │       │   │               │   ├── Myers
+%            │       │   │               │   │   └── Ellis
+%            │       │   │               │   └── Bryant
+%            │       │   │               └── Fisher
+%            │       │   └── Gibson
+%            │       └── Chavez
+%            └── Hayes
+%    \end{Verbatim}
+%
+%
+%    % Add a bibliography block to the postdoc
+%    
+%    
     
 \end{document}
