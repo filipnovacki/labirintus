@@ -422,7 +422,7 @@ s Condom.
 U cijelom repozitoriju nalaze se četiri foldera i nekoliko datoteka u
 \textit{rootu}. U mapi \texttt{data} nalaze se datoteke koje služe za rad
 algoritama, dakle popis vrhova, bridova i slično.
-Mapa \textbf{kreiranje\_grafa} je \texttt{Visual Studio} projekt pisan u
+Mapa \texttt{kreiranje\_grafa} je \texttt{Visual Studio} projekt pisan u
 \texttt{C\#}-u koji matricu jedinica i nula (detaljnije opisano kasnije)
 pretvara u vrhove i bridove u \texttt{csv} datoteci.
 U mapi \texttt{scripts} nalaze se svi algoritmi koji se koriste u radu,
@@ -754,7 +754,7 @@ U kodu ispod funkcija je stavljena u petlju 20 puta jer se autorima to čini opt
 Za usporedbu, priložen je ispis brojevnog stanja vrhova grafa prije i poslije čišćenja.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{48}{\boxspacing}
+\prompt{In}{incolor}{19}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Cijeli graf: }\PY{l+s+s2}{\PYZdq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{G}\PY{o}{.}\PY{n}{edges}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ bridova, }\PY{l+s+s2}{\PYZdq{}}\PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{G}\PY{o}{.}\PY{n}{nodes}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ vrhova.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
 \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Čisti graf: }\PY{l+s+s2}{\PYZdq{}} \PY{o}{+} \PY{n+nb}{str}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{cl\PYZus{}graph}\PY{o}{.}\PY{n}{edges}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ bridova, }\PY{l+s+s2}{\PYZdq{}}\PY{o}{+}\PY{n+nb}{str}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{cl\PYZus{}graph}\PY{o}{.}\PY{n}{nodes}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ vrhova.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
@@ -891,12 +891,26 @@ Najbrži put do cilja dug je 62 kvadrata.
     \hypertarget{a-algoritam}{%
 \section{A* algoritam}\label{a-algoritam}}
 
+U program uvodimo funkciju \texttt{astar} iz istoimene skripte.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{29}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k+kn}{from} \PY{n+nn}{scripts}\PY{n+nn}{.}\PY{n+nn}{astar} \PY{k+kn}{import} \PY{n}{astar}
 \end{Verbatim}
 \end{tcolorbox}
+
+\texttt{A*} nalikuje Dijkstrinom algoritmu, no osim težina bridova uzima u obzir i heuristiku kako bi brže došao do cilja. Heuristika je metrika koja predočava stvarnu udaljenost nekog vrha od cilja. S obzirom na to da je naš labirint zadan u obliku matrice, svakom su vrhu točno određene koordinate, pa se udaljenost od svakog vrha do cilja može lako izračunati.
+
+Najkraća "zračna" udaljenost od vrha do izlaza iz labirinta garantira da nije moguće pronaći put koji je kraći od nje. Algoritam bira idući vrh na sličan način kao Dijkstrin algoritam, samo što neće uzimati u obzir samo udaljenost do idućeg vrha, već će promatrati do sad ukupno prijeđen put i vrijednost heuristike za taj vrh i uzima kao idući vrh onaj čija je vrijednost ukupno najmanja.
+
+Takvo rezoniranje daje tri elementa po kojima se može zaključiti da neki vrh može ili ne može pripadati najkraćem put:
+\begin{itemize}
+	\item kad je put do cilja pronađen, svaki vrh koji ima heuristiku veću od izračunatog puta ne može biti dio najkraćeg puta
+	\item kad je put do cilja izračunat, svaki vrh čiji je zbroj heuristike i put do sebe veći od izračunatog puta do cilja ne može biti dio najkraćeg puta
+	\item kad je izračunat put do cilja, svaki vrh do kojeg je put dulji nego izračunat put do cilja ne može pripadati najkraćem putu.
+\end{itemize}
+Ovim se elementima osigurava da algoritam ne mora proći kroz sve vrhove, već se kontinuirano približava cilju umjesto da traži alternativne puteve na sve strane.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{30}{\boxspacing}
@@ -914,6 +928,7 @@ Harris/Clark/Lewis/Robinson/Phillips/Campbell/Ramirez/Scott/Wright/King')
 Broj vrhova u grafovu: 147
     \end{Verbatim}
 
+Kao što je ispisano u nastavku, ovaj je algoritam dao jednak rezultat kao i Dijkstrin algoritam u poglavlju iznad.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{31}{\boxspacing}
@@ -929,6 +944,8 @@ Najbrži put do cilja dug je 62 kvadrata.
     \hypertarget{oux10diux161ux107en-graf}{%
 \subsection{Očišćen graf}\label{oux10diux161ux107en-graf}}
 
+Kao i u prethodnom poglavlju, funkcija za čišćenje grafa izvršena je i u nastavku u kombinaciji s \texttt{A*} algoritmom. Vrhovima su dodijeljena engleska prezimena kao nazivi, a heuristika svakog vrha bit će korijenovana kako se njena težina ne bi previše naglasila.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{32}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -939,6 +956,8 @@ Najbrži put do cilja dug je 62 kvadrata.
 \end{Verbatim}
 \end{tcolorbox}
 
+Kao i prije, funkcija se izvršava 20 puta u petlji.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{33}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -947,12 +966,16 @@ Najbrži put do cilja dug je 62 kvadrata.
 \end{Verbatim}
 \end{tcolorbox}
 
+Poziva se \texttt{A*} algoritam koji prolazi kroz očišćen graf:
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{34}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{n}{distances\PYZus{}a\PYZus{}clean} \PY{o}{=} \PY{n}{astar}\PY{p}{(}\PY{n}{astar\PYZus{}clean}\PY{p}{,} \PY{n}{src\PYZus{}a\PYZus{}clean}\PY{p}{,} \PY{n}{end\PYZus{}a\PYZus{}clean}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
+
+Slijedi popis vrhova od ulaza do izlaza iz labirinta te ukupan broj vrhova očišćenog grafa.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{35}{\boxspacing}
@@ -967,6 +990,8 @@ Put od početka do cilja:  Node('/Smith/Johnson/Williams/Ramos/Wallace/Martinez/
 nderson/Taylor/White/Lopez/Harris/Clark/Lewis/Robinson/Ramirez/Wright/King')
 Broj vrhova u grafovu: 36
     \end{Verbatim}
+
+Rezultat je ponovno jednak kao prije - duljina je najkraćeg puta 62.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{36}{\boxspacing}
@@ -983,12 +1008,16 @@ Najbrži put do cilja dug je 62 kvadrata.
 \subsection{Heuristika koja ne uzima korijen iz
 udaljenosti}\label{heuristika-koja-ne-uzima-korijen-iz-udaljenosti}}
 
+Demonstracije radi, u nastavku je izvršen \texttt{A*} algoritam koji ne korijenuje heuristiku, već zadržava kvadratne vrijednosti. Ovo ima negativan učinak na krajnji rezultat zato što previše važnosti daje vrijednosti heuristike u odnosu na prijeđenu udaljenost, što može rezultirati neoptimalnim putem.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{37}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{n}{graph\PYZus{}pow} \PY{o}{=} \PY{n}{graf\PYZus{}entry}\PY{o}{.}\PY{n}{populate\PYZus{}graph}\PY{p}{(}\PY{k+kc}{True}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pow}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
+
+Ovdje nije uzet očišćen, već originalni graf te je algoritam izvršen na njemu.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{38}{\boxspacing}
@@ -998,6 +1027,8 @@ udaljenosti}\label{heuristika-koja-ne-uzima-korijen-iz-udaljenosti}}
 \PY{n}{end\PYZus{}a} \PY{o}{=} \PY{n}{graph\PYZus{}pow}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}
 \end{Verbatim}
 \end{tcolorbox}
+
+Kao rezultat, vraćen je drukčiji put nego što je bio kad su vrijednosti heuristika bile korijenovane.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{39}{\boxspacing}
@@ -1016,6 +1047,10 @@ t/King')
 Broj vrhova u grafovu: 147
     \end{Verbatim}
 
+Učinak se jasno vidi kod ispisa duljine "najkraćeg" puta, koji u ovom slučaju zapravo nije najkraći. Algoritam ovdje vraća put koji je za dvije jedinice dulji nego u svim dosadašnjim rješenjima.
+
+Ovisno o vrsti, veličini i strukturi labirinta ili postavljenim prioritetima, heuristika koju koristi \texttt{A*} ne mora uvijek biti korijen iz zbroja kvadrata udaljenosti promatrane točke i točke cilja po osi ordinata i apscisa. Ovdje se to pokazalo kao dobro rješenje, između ostalog zato što je graf relativno malen, no dovoljno kompleksan da svaki algoritam za njegovo rješavanje nije jednako učinkovit, te zato što je on prikazan matrično, odnosno struktura grafa pogoduje za ovakav način rješavanja. Zaključuje se da se heuristika odabire i koristi u skladu sa zahtjevima problema koji se rješava ovim algoritmom.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{40}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -1031,6 +1066,9 @@ Najbrži put do cilja dug je 64 kvadrata.
 \section{Usporedba rješenja
 algoritama}\label{usporedba-rjeux161enja-algoritama}}
 
+U nastavku su rezimirani rezultati provedbe algoritama s pojedinim modifikacijama.
+
+U prvoj je usporedbi vidljiva suptilna razlika u konkretnom putu koji je vraćen kao najkraći u ova dva algoritma, no duljina im je na kraju jednaka.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{41}{\boxspacing}
@@ -1051,6 +1089,8 @@ r/Jenkins/Ortiz/Ross/Morales/White/Lopez/Lee/Gonzalez/Harris/Clark/Lewis/Robinso
 n/Phillips/Campbell/Ramirez/Scott/Wright/King')
     \end{Verbatim}
 
+Kad su se isti algoritmi provodili na očišćenim verzijama grafa labirinta, rješenje je ispalo identično u oba slučaja.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{42}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -1068,41 +1108,8 @@ Node('/Smith/Johnson/Williams/Ramos/Wallace/Martinez/Anderson/Taylor/White/Lopez
 /Harris/Clark/Lewis/Robinson/Ramirez/Wright/King')
     \end{Verbatim}
 
-    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{43}{\boxspacing}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PY{c+c1}{\PYZsh{} astar \PYZhy{} dobra heuristika}
-\PY{n}{pp}\PY{o}{.}\PY{n}{pprint}\PY{p}{(}\PY{n}{distances\PYZus{}a\PYZus{}clean}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{end}\PY{p}{]}\PY{p}{)}
-\PY{c+c1}{\PYZsh{} astar \PYZhy{} \PYZsq{}pretjerana\PYZsq{} heuristika}
-\PY{n}{pp}\PY{o}{.}\PY{n}{pprint}\PY{p}{(}\PY{n}{distances\PYZus{}a\PYZus{}pow}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{end}\PY{p}{]}\PY{p}{)}
-\end{Verbatim}
-\end{tcolorbox}
+U posljednjoj usporedbi vidi se očita razlika u rezultatu, što je prouzročeno pogrešnim odabirom heuristike. Tako je put nepotrebno dulji jer je u postupku odabran pogrešan prioritet te je u ovom slučaju Dijkstrin algoritam zapravo vratio bolji rezultat nego \texttt{A*} zbog nepreciznog provođenja.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-Node('/Smith/Johnson/Williams/Ramos/Wallace/Martinez/Anderson/Taylor/White/Lopez
-/Harris/Clark/Lewis/Robinson/Ramirez/Wright/King')
-Node('/Smith/Johnson/Williams/West/Ramos/Wallace/Griffin/Martinez/Anderson/Taylo
-r/Jenkins/Ortiz/Ross/Morales/White/Lopez/Lee/Gonzalez/Harris/Clark/Lewis/Robinso
-n/Walker/Perez/Hall/Collins/Parker/Torres/Wright/King')
-    \end{Verbatim}
-    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{41}{\boxspacing}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PY{c+c1}{\PYZsh{} dijkstra}
-\PY{n}{pp}\PY{o}{.}\PY{n}{pprint}\PY{p}{(}\PY{n}{distances}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{end}\PY{p}{]}\PY{p}{)}
-\PY{c+c1}{\PYZsh{} astar}
-\PY{n}{pp}\PY{o}{.}\PY{n}{pprint}\PY{p}{(}\PY{n}{distances\PYZus{}a}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{end}\PY{p}{]}\PY{p}{)}
-\end{Verbatim}
-\end{tcolorbox}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-Node('/Smith/Johnson/Williams/West/Ramos/Wallace/Griffin/Martinez/Anderson/Taylo
-r/Thomas/Hernandez/Moore/Martin/White/Lopez/Lee/Gonzalez/Harris/Clark/Lewis/Robi
-nson/Phillips/Campbell/Ramirez/Scott/Wright/King')
-Node('/Smith/Johnson/Williams/West/Ramos/Wallace/Griffin/Martinez/Anderson/Taylo
-r/Thomas/Hernandez/Moore/Martin/White/Lopez/Lee/Gonzalez/Harris/Clark/Lewis/Robi
-nson/Phillips/Campbell/Ramirez/Evans/Turner/Torres/Wright/King')
-    \end{Verbatim}
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{43}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
