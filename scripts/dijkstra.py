@@ -1,12 +1,3 @@
-def dijkstra_scratch():
-    pass
-    #spath = []
-
-    #u = [x for _, x in distances.items() if x == min(distances[node]\
-    #    for node in (G.nodes - [x for x in spath if spath[x] == False]))][0]
-
-    #spath.append(u)
-
 def min_dist(G, dist, spath):
     min = float('inf')
     min_index = None

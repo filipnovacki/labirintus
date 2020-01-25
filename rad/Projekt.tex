@@ -19,9 +19,9 @@
     % Ensure that by default, figures have no caption (until we provide a
     % proper Figure object with a Caption API and a way to capture that
     % in the conversion process - todo).
-    \usepackage{caption}
-    \DeclareCaptionFormat{nocaption}{}
-    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+    %\usepackage{caption}
+    %\DeclareCaptionFormat{nocaption}{}
+    %\captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
 
     \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
     \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
@@ -390,11 +390,15 @@
 \usepackage{pmboxdraw}
 \usepackage{fancyvrb}
 \usepackage{tocloft}
+\let\oldsection\section
+\renewcommand\section{\clearpage\oldsection}
 
 \begin{document}
 
+
 	%\maketitle
 	\input{naslov}
+	\tableofcontents
 
 	\section{Uvod}
 	Ovo je projektni zadatak iz kolegija Diskretne strukture i teorija grafova na Fakultetu organizacije i informatike u Varaždinu Sveučilišta u Zagrebu. Cilj projektnog zadatka povezati je gradivo iz kolegija s primjenom iz stvarnog života, ili barem na nekom primjeru koji se može iskoristiti u neke druge svrhe.
@@ -407,7 +411,13 @@
 
 	\texttt{Python} se može instalirati preuzimanjem datoteka sa službene web stranice ili na Linux distribucijama pomoću službenih repozitorija.
 
-	Za instalaciju biblioteka potrebno je izvršiti naredbu \texttt{pip install -t requirements.txt} dok smo u mapi gdje je projekt i datoteka \texttt{requirements.txt}. Ukoliko \texttt{pip} nije instaliran, možemo ga instalirati pomoću \texttt{python -m ensurepip}.
+	Za instalaciju biblioteka potrebno je izvršiti naredbu \texttt{pip
+	install -t requirements.txt} dok smo u mapi gdje je projekt i datoteka
+	\texttt{requirements.txt}. Ukoliko \texttt{pip} nije instaliran, možemo
+	ga instalirati pomoću \texttt{python -m ensurepip}.\footnote{Jedan od
+	autora projekta imao je završni rad na ovu temu pa su ovi detalji stoga
+	detaljno opisani. Ukoliko čitatelj naiđe na poteškoće poziva se na
+	neoklijevanje u postavljanju upita.}
 
 	\subsection{Upute za pokretanje}
 
@@ -434,11 +444,27 @@ Sav kod koji se nalazi u repozitoriju autorski je, a vanjske biblioteke koje su
 se koristile pozvane su po potrebi, vidljivo također u nastavku.
 
 	\section{Opis problema}
-	U radu se rješava problem pronalaženja najkraćeg puta za izlazak iz zadanog labirinta. Ulaz je u ovom slučaju labirint reprezentiran kao matrica nula i jedinica, gdje je svaka jedinica dio puta, a svaka nula zid kroz koji se ne može proći. Labirint se može prikazati kao graf u kojem je su svi "neravni" dijelovi vrhovi - početak i kraj, ugao u kojem put mijenja smjer, završetak slijepe ulice te raskrižje. Svi vrhovi između kojih postoji neki put spojeni su bridovima, s tim da se međusobno spajaju samo uzastopni vrhovi, a nijedan vrh nije stupnja većeg od 4.
+	U radu se rješava problem pronalaženja najkraćeg puta za izlazak iz
+	zadanog labirinta. Ulaz je u ovom slučaju labirint reprezentiran kao
+	matrica nula i jedinica, gdje je svaka jedinica dio puta, a svaka nula
+	zid kroz koji se ne može proći. Labirint se može prikazati kao graf u
+	kojem je su svi "neravni" dijelovi vrhovi - početak i kraj, ugao u
+	kojem put mijenja smjer, završetak slijepe ulice te raskrižje. Svi
+	vrhovi između kojih postoji neki put spojeni su bridovima, s tim da se
+	međusobno spajaju samo uzastopni vrhovi, a nijedan vrh nije stupnja
+	većeg od 4.
 
-	Težine su u zadatku zadane brojem kvadratića između dva križanja, odnosno vrha u grafu. To je možda malo nespretno rečeno tako da ćemo kod rješavanja pretpostaviti da su autori zadatka mislili na korake između vrhova.
+	Težine su u zadatku zadane brojem kvadratića između dva križanja,
+	odnosno vrha u grafu. To je možda malo nespretno rečeno tako da ćemo
+	kod rješavanja pretpostaviti da su autori zadatka mislili na korake
+	između vrhova.
 
-	Svaki "korak" u labirintu ima težinu 1, iz čega se bridovima dodjeljuju težine, ovisno o tome koliko koraka ima od jednog vrha brida do drugog (koliko su vrhovi udaljeni). Ovakva pretvorba omogućava rješavanje labirinta pomoću algoritama za pronalaženje najkraćeg puta u grafu. Ovdje je to izvedeno pomoću poboljšanog Dijkstrinog algoritma i \texttt{A*} algoritma.
+	Svaki "korak" u labirintu ima težinu 1, iz čega se bridovima dodjeljuju
+	težine, ovisno o tome koliko koraka ima od jednog vrha brida do drugog
+	(koliko su vrhovi udaljeni). Ovakva pretvorba omogućava rješavanje
+	labirinta pomoću algoritama za pronalaženje najkraćeg puta u grafu.
+	Ovdje je to izvedeno pomoću poboljšanog Dijkstrinog algoritma i
+	\texttt{A*} algoritma.
 
 	\begin{figure}[h]
 		\centering
@@ -446,6 +472,12 @@ se koristile pozvane su po potrebi, vidljivo također u nastavku.
 		\label{lab1}
 		\caption{Labirint koji se rješava u radu}
 	\end{figure}
+
+	S obzirom na to da smo zadan problem smatrali vrlo laganim, odlučili
+	smo ga malo proširiti pa smo tako u projektu predstavili i određene
+	dodatke koji nisu spominjani nigdje u zadatku. Osim toga su i
+	ispravljene tehničke greškice koje su se autorima zadatka podmetnule
+	kod opisivanja problema. Vodili smo se srcem u tom slučaju.
 
     \hypertarget{potraga-za-izgubljenim-blagom-zaboravljenog-faraona}{%
 \section{Potraga za izgubljenim blagom zaboravljenog
@@ -499,6 +531,7 @@ U datoteci \texttt{vrhovi.txt} pohranjeni su svi vrhovi s pripadajućim koordina
 \end{Verbatim}
 \end{tcolorbox}
 
+\begin{samepage}
     \begin{Verbatim}[commandchars=\\\{\}]
 naziv   red     stupac
 A       10      0
@@ -511,6 +544,7 @@ G       6       8
 H       6       10
 I       1       10
     \end{Verbatim}
+\end{samepage}
 
 Nadalje, datoteka \texttt{bridovi.txt} sadrži popis bridova definiranih dvama vrhovima i pripadnom težinom. Slijedi popis prvih 10 bridova.
 
@@ -767,7 +801,10 @@ Cijeli graf: 166 bridova, 147 vrhova.
     \end{Verbatim}
 
 
-Sad je naš labirint značajno pojednostavljen - broj vrhova trostruko se smanjio i nije ostao nijedan vrh stupnja 2 ili manjeg (osim početka i kraja). To se jasno vidi u prikazu pojednostavljenog grafa:
+Sad je naš labirint značajno pojednostavljen - broj bridova trostruko se
+smanjio, a broj se vrhova rasčetvorio. Nije ostao nijedan vrh stupnja 2 ili
+manjeg (osim početka i kraja). To se jasno vidi u prikazu pojednostavljenog
+grafa:
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{20}{\boxspacing}
@@ -783,6 +820,11 @@ Sad je naš labirint značajno pojednostavljen - broj vrhova trostruko se smanji
 
     \hypertarget{dijkstrin-algoritam}{%
 \section{Dijkstrin algoritam}\label{dijkstrin-algoritam}}
+
+Dijkstrin algoritam nećemo previše objašnjavati jer bi on trebao biti dovoljno
+jasan iz konteksta kolegija na kojiem se nalazi ovaj projekt.
+
+\subsection{Provedba algoritma}
 
 U program se uvoze funkcije \texttt{RenderTree} i \texttt{Node} iz biblioteke \texttt{anytree} za izradu stabala te funkcija \texttt{dijkstra} iz istoimene skripte koja se nalazi u direktoriju \texttt{scripts}.
 
@@ -900,7 +942,11 @@ U program uvodimo funkciju \texttt{astar} iz istoimene skripte.
 \end{Verbatim}
 \end{tcolorbox}
 
-\texttt{A*} nalikuje Dijkstrinom algoritmu, no osim težina bridova uzima u obzir i heuristiku kako bi brže došao do cilja. Heuristika je metrika koja predočava stvarnu udaljenost nekog vrha od cilja. S obzirom na to da je naš labirint zadan u obliku matrice, svakom su vrhu točno određene koordinate, pa se udaljenost od svakog vrha do cilja može lako izračunati.
+\texttt{A*} nalikuje Dijkstrinom algoritmu, no osim težina bridova uzima u
+obzir i heuristiku kako bi brže došao do cilja. Heuristika je znanje koja
+predočava stvarnu udaljenost nekog vrha od cilja. S obzirom na to da je naš
+labirint zadan u obliku matrice, svakom su vrhu točno određene koordinate, pa
+se udaljenost od svakog vrha do cilja može lako izračunati.
 
 Najkraća "zračna" udaljenost od vrha do izlaza iz labirinta garantira da nije moguće pronaći put koji je kraći od nje. Algoritam bira idući vrh na sličan način kao Dijkstrin algoritam, samo što neće uzimati u obzir samo udaljenost do idućeg vrha, već će promatrati do sad ukupno prijeđen put i vrijednost heuristike za taj vrh i uzima kao idući vrh onaj čija je vrijednost ukupno najmanja.
 
@@ -911,6 +957,10 @@ Takvo rezoniranje daje tri elementa po kojima se može zaključiti da neki vrh m
 	\item kad je izračunat put do cilja, svaki vrh do kojeg je put dulji nego izračunat put do cilja ne može pripadati najkraćem putu.
 \end{itemize}
 Ovim se elementima osigurava da algoritam ne mora proći kroz sve vrhove, već se kontinuirano približava cilju umjesto da traži alternativne puteve na sve strane.
+
+\subsection{Provedba algoritma}
+
+Provedimo algoritam sličnim pozivima kao i Dijkstrin algoritam.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{30}{\boxspacing}
@@ -1128,22 +1178,53 @@ Thomas/Hernandez/Moore/Martin/White/Lopez/Lee/Gonzalez/Harris/Clark/Lewis/Robins
 on/Phillips/Campbell/Ramirez/Evans/Turner/Torres/Wright/King')
     \end{Verbatim}
 
-    \hypertarget{appendix}{%
-\section{Appendix}\label{appendix}}
+\section{Zaključak}
 
-    \hypertarget{prikaz-stabla-putova}{%
-\subsection{Prikaz stabla putova}\label{prikaz-stabla-putova}}
+Ovaj je rad imao u cilju demonstrirati dva algoritma koja služe za pronalazak
+puta kroz labirint. Naglasak je napravljen na njihovim razlikama te prednostima
+i nedostatcima. I Dijkstra i \texttt{A*} algoritmi nam garantiraju siguran
+dolazak do cilja, no Dijkstrin algoritam ima određene nedostatke koji se jako
+manifestiraju na ogromnim grafovima, odnosno labirintima. Njih \texttt{A*}
+izbjegava koristeći heuristike te tako puno manje vrhova obrađuje nego što bi
+to napravio Dijkstra, a pritom očuva vjerodostojnost rezultata.
 
-    \hypertarget{dijkstrin-algoritam}{%
-\subsubsection{Dijkstrin algoritam}\label{dijkstrin-algoritam}}
+Usporediti algoritme se može na mnoge načine, a mnogi od njih nisu posve očiti.
+Složenost obaju algoritama je ista, no \texttt{A*} na puno sofisticiraniji
+način traži smjer u kojem pronalaziti put do cilja. Osim toga, \texttt{A*}
+algoritam gotovo pola vrhova uopće nije morao pregledavati jer su mu heuristike
+dopustile da ih ignorira.
 
-    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{44}{\boxspacing}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{for} \PY{n}{pre}\PY{p}{,} \PY{n}{fill}\PY{p}{,} \PY{n}{node} \PY{o+ow}{in} \PY{n}{RenderTree}\PY{p}{(}\PY{n}{distances}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{src}\PY{p}{]}\PY{p}{)}\PY{p}{:}
-    \PY{n+nb}{print}\PY{p}{(}\PY{n}{pre} \PY{o}{+} \PY{n}{node}\PY{o}{.}\PY{n}{name}\PY{p}{)}
-\end{Verbatim}
-\end{tcolorbox}
+Na temu heuristika treba i napomenuti kako je važan odabir heuristika kako bi
+rezultat bio dovoljno dobar. Premale vrijednosti heuristika mogu dovesti do
+usporavanja algoritma i gubitka prednosti koje nam donosi \texttt{A*}, dok
+previsoke vrijednosti mogu dovesti do krivih rezultata jer premalen utjecaj ima
+put koji je prijeđen do neke točke.
+
+Osim algoritama, ovaj se težak problem može brže riješiti prilagodbom grafa
+tako da se eliminiraju nepotrebni bridovi i vrhovi kroz koje se sigurno neće
+prolaziti. Na konkretnom se primjeru u ovom zadatku broj vrhova smanjio više od
+četiri puta, a broj bridova više od tri puta.
+
+Ispravnim pristupom i teški se problemi mogu jednostavno riješiti i ovaj rad je
+imao za cilj demonstrirati eleganciju i jednostavnost rješavanja ovog teškog
+problema.
+
+%    \hypertarget{appendix}{%
+%\section{Appendix}\label{appendix}}
+
+%    \hypertarget{prikaz-stabla-putova}{%
+%\subsection{Prikaz stabla putova}\label{prikaz-stabla-putova}}
+
+%    \hypertarget{dijkstrin-algoritam}{%
+%\subsubsection{Dijkstrin algoritam}\label{dijkstrin-algoritam}}
+
+%    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+%\prompt{In}{incolor}{44}{\boxspacing}
+%\begin{Verbatim}[commandchars=\\\{\}]
+%\PY{k}{for} \PY{n}{pre}\PY{p}{,} \PY{n}{fill}\PY{p}{,} \PY{n}{node} \PY{o+ow}{in} \PY{n}{RenderTree}\PY{p}{(}\PY{n}{distances}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{[}\PY{n}{src}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+%    \PY{n+nb}{print}\PY{p}{(}\PY{n}{pre} \PY{o}{+} \PY{n}{node}\PY{o}{.}\PY{n}{name}\PY{p}{)}
+%\end{Verbatim}
+%\end{tcolorbox}
 %
 %    \begin{Verbatim}[commandchars=\\\{\}]
 %Smith
