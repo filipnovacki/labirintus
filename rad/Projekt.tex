@@ -2,7 +2,7 @@
 
     \usepackage[breakable]{tcolorbox}
     \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
-    
+
     \usepackage{iftex}
     \ifPDFTeX
     	\usepackage[T1]{fontenc}
@@ -41,7 +41,7 @@
     \usepackage{eurosym} % defines \euro
     \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
     \usepackage{fancyvrb} % verbatim replacement that allows latex
-    \usepackage{grffile} % extends the file name processing of package graphics 
+    \usepackage{grffile} % extends the file name processing of package graphics
                          % to support a larger range
     \makeatletter % fix for grffile with XeLaTeX
     \def\Gread@@xetex#1{%
@@ -64,9 +64,9 @@
     \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
                                 % normalem makes italics be italics, not underlines
     \usepackage{mathrsfs}
-    
 
-    
+
+
     % Colors for the hyperref package
     \definecolor{urlcolor}{rgb}{0,.145,.698}
     \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
@@ -113,7 +113,7 @@
     \newcommand{\RegionMarkerTok}[1]{{#1}}
     \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
     \newcommand{\NormalTok}[1]{{#1}}
-    
+
     % Additional commands for more recent versions of Pandoc
     \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
     \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
@@ -132,8 +132,8 @@
     \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
     \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
     \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
-    
-    
+
+
     % Define a nice break command that doesn't care if a line doesn't already
     % exist.
     \def\br{\hspace*{\fill} \\* }
@@ -147,11 +147,11 @@
     % Document parameters
     % Document title
     \title{Projekt}
-    
-    
-    
-    
-    
+
+
+
+
+
 % Pygments definitions
 \makeatletter
 \def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
@@ -254,53 +254,53 @@
 \makeatother
 
 
-    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    % For linebreaks inside Verbatim environment from package fancyvrb.
     \makeatletter
-        \newbox\Wrappedcontinuationbox 
-        \newbox\Wrappedvisiblespacebox 
-        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
-        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
-        \newcommand*\Wrappedcontinuationindent {3ex } 
-        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
-        % Take advantage of the already applied Pygments mark-up to insert 
-        % potential linebreaks for TeX processing. 
-        %        {, <, #, %, $, ' and ": go to next line. 
-        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
-        % Use of \textquotesingle for straight quote. 
-        \newcommand*\Wrappedbreaksatspecials {% 
-            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
-            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
-            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
-            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
-            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
-            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
-            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
-            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
-            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
-            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
-            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
-            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
-            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
-            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
-        } 
-        % Some characters . , ; ? ! / are not pygmentized. 
-        % This macro makes them "active" and they will insert potential linebreaks 
-        \newcommand*\Wrappedbreaksatpunct {% 
-            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
-            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
-            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
-            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
-            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
-            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
-            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
             \catcode`\.\active
-            \catcode`\,\active 
+            \catcode`\,\active
             \catcode`\;\active
             \catcode`\:\active
             \catcode`\?\active
             \catcode`\!\active
-            \catcode`\/\active 
-            \lccode`\~`\~ 	
+            \catcode`\/\active
+            \lccode`\~`\~
         }
     \makeatother
 
@@ -323,10 +323,10 @@
             \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
             {\kern\fontdimen2\font}%
         }%
-        
+
         % Allow breaks at special characters using \PYG... macros.
         \Wrappedbreaksatspecials
-        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
         \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
     }
     \makeatother
@@ -336,7 +336,7 @@
     \definecolor{outcolor}{HTML}{D84315}
     \definecolor{cellborder}{HTML}{CFCFCF}
     \definecolor{cellbackground}{HTML}{F7F7F7}
-    
+
     % prompt
     \makeatletter
     \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
@@ -344,11 +344,11 @@
     \newcommand{\prompt}[4]{
         \ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}
     }
-    
 
-    
+
+
     % Prevent overflowing lines due to hard-to-break entities
-    \sloppy 
+    \sloppy
     % Setup hyperref package
     \hypersetup{
       breaklinks=true,  % so long urls are correctly broken across lines
@@ -358,10 +358,10 @@
       citecolor=citecolor,
       }
     % Slightly bigger margins than the latex defaults
-    
+
     \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
-    
-    
+
+
 
 
 
@@ -392,43 +392,43 @@
 \usepackage{tocloft}
 
 \begin{document}
-	
+
 	%\maketitle
 	\input{naslov}
 
 	\section{Uvod}
-	Ovo je projektni zadatak iz kolegija Diskretne strukture i teorija grafova na Fakultetu organizacije i informatike u Varaždinu Sveučilišta u Zagrebu. Cilj projektnog zadatka povezati je gradivo iz kolegija s primjenom iz stvarnog života, ili barem na nekom primjeru koji se može iskoristiti u neke druge svrhe. 
-	
+	Ovo je projektni zadatak iz kolegija Diskretne strukture i teorija grafova na Fakultetu organizacije i informatike u Varaždinu Sveučilišta u Zagrebu. Cilj projektnog zadatka povezati je gradivo iz kolegija s primjenom iz stvarnog života, ili barem na nekom primjeru koji se može iskoristiti u neke druge svrhe.
+
 	Projekt je verzioniran na GitHubu te je cijeli kod dostupan na poveznici \url{www.github.com/filipnovacki/labirintus}. Rješenje je razvijano u \texttt{Pythonu} uz pomoć \texttt{Jupyter Notebooka} te biblioteka koje olakšavaju rad s grafovima i algoritmima. Popis te opis njihove instalacije bit će opisan u idućem poglavlju.
-	
+
 	Uz ovaj dokument priložena je i datoteka sa svim izvornim datotekama uključujući i \textit{notebook} koji se može pokrenuti. U ovom će dokumentu biti sadržaj cijelog \textit{notebooka} te objašnjenje i rezoniranje o postupcima, a \textit{notebook} bez objašnjenja (odnosno spreman na izvršavanje) nalazi se u drugoj priloženoj datoteci.
-	
+
 	\subsection{Instalacija biblioteka i pokretanje}
-	
-	\texttt{Python} se može instalirati preuzimanjem datoteka sa službene web stranice ili na Linux distribucijama pomoću službenih repozitorija. 
-	
-	Za instalaciju biblioteka potrebno je izvršiti naredbu \texttt{pip install -t requirements.txt} dok smo u mapi gdje je projekt i datoteka \texttt{requirements.txt}. Ukoliko \texttt{pip} nije instaliran, možemo ga instalirati pomoću \texttt{python -m ensurepip}. 
-	
+
+	\texttt{Python} se može instalirati preuzimanjem datoteka sa službene web stranice ili na Linux distribucijama pomoću službenih repozitorija.
+
+	Za instalaciju biblioteka potrebno je izvršiti naredbu \texttt{pip install -t requirements.txt} dok smo u mapi gdje je projekt i datoteka \texttt{requirements.txt}. Ukoliko \texttt{pip} nije instaliran, možemo ga instalirati pomoću \texttt{python -m ensurepip}.
+
 	\subsection{Upute za pokretanje}
-	
+
 	TODO:
 	-struktura programskog rješenja
 	-
-	
+
 	\section{Opis problema}
-	U radu se rješava problem pronalaženja najkraćeg puta za izlazak iz zadanog labirinta. Ulaz je u ovom slučaju labirint reprezentiran kao matrica nula i jedinica, gdje je svaka jedinica dio puta, a svaka nula zid kroz koji se ne može proći. Labirint se može prikazati kao graf u kojem je su svi "neravni" dijelovi vrhovi - početak i kraj, ugao u kojem put mijenja smjer, završetak slijepe ulice te raskrižje. Svi vrhovi između kojih postoji neki put spojeni su bridovima, s tim da se međusobno spajaju samo uzastopni vrhovi, a nijedan vrh nije stupnja većeg od 4. 
-	
+	U radu se rješava problem pronalaženja najkraćeg puta za izlazak iz zadanog labirinta. Ulaz je u ovom slučaju labirint reprezentiran kao matrica nula i jedinica, gdje je svaka jedinica dio puta, a svaka nula zid kroz koji se ne može proći. Labirint se može prikazati kao graf u kojem je su svi "neravni" dijelovi vrhovi - početak i kraj, ugao u kojem put mijenja smjer, završetak slijepe ulice te raskrižje. Svi vrhovi između kojih postoji neki put spojeni su bridovima, s tim da se međusobno spajaju samo uzastopni vrhovi, a nijedan vrh nije stupnja većeg od 4.
+
 	Težine su u zadatku zadane brojem kvadratića između dva križanja, odnosno vrha u grafu. To je možda malo nespretno rečeno tako da ćemo kod rješavanja pretpostaviti da su autori zadatka mislili na korake između vrhova.
-	
+
 	Svaki "korak" u labirintu ima težinu 1, iz čega se bridovima dodjeljuju težine, ovisno o tome koliko koraka ima od jednog vrha brida do drugog (koliko su vrhovi udaljeni). Ovakva pretvorba omogućava rješavanje labirinta pomoću algoritama za pronalaženje najkraćeg puta u grafu. Ovdje je to izvedeno pomoću poboljšanog Dijkstrinog algoritma i \texttt{A*} algoritma.
-	
+
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=.9\linewidth]{"slikice/labirint.jpg"}
 		\label{lab1}
 		\caption{Labirint koji se rješava u radu}
 	\end{figure}
-    
+
     \hypertarget{potraga-za-izgubljenim-blagom-zaboravljenog-faraona}{%
 \section{Potraga za izgubljenim blagom zaboravljenog
 faraona}\label{potraga-za-izgubljenim-blagom-zaboravljenog-faraona}}
@@ -650,7 +650,7 @@ Naš labirint prikazan je sljedećim grafom. Argumenti funkcije \texttt{draw} su
     \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_0.png}
     \end{center}
     { \hspace*{\fill} \\}
-    
+
     \hypertarget{obiux10dan-graf-bez-prezimena-ljudi}{%
 \subsection{Običan graf bez prezimena
 ljudi}\label{obiux10dan-graf-bez-prezimena-ljudi}}
@@ -718,7 +718,9 @@ Vrhovi se brišu radi smanjivanja kompleksnosti grafa te tako algoritmima treba 
 \end{Verbatim}
 \end{tcolorbox}
 
-Funkcija kao argument prima graf kojeg će očistiti. Najprije briše vrhove stupnja 1 jer to znači da je taj vrh završetak slijepe ulice u labirintu i sigurno neće biti dio puta. Ovdje su izuzeti početak i kraj labirinta. Osim toga brišu se i vrhovi stupnja 2 jer su to obični zavoji koji također nemaju utjecaj na put do cilja. U kodu ispod funkcija je stavljena u petlju 20 puta jer se autorima to čini optimalno za ovu veličinu grafa. Za veće grafove može se ponoviti i više puta, no nije kritično za izvršavanje programa.
+Funkcija kao argument prima graf kojeg će očistiti. Najprije briše vrhove stupnja 1 jer to znači da je taj vrh završetak slijepe ulice u labirintu i sigurno neće biti dio puta. Ovdje su izuzeti početak i kraj labirinta. Osim toga brišu se i vrhovi stupnja 2 jer su to obični zavoji koji također nemaju utjecaj na put do cilja. Nakon što se vrh stupnja 2 obriše, bridovi koji su ga povezivali s drugim bridovima spajaju se u jedan čija je težina zbroj težina obrisanih bridova.
+
+U kodu ispod funkcija je stavljena u petlju 20 puta jer se autorima to čini optimalno za ovu veličinu grafa. Za veće grafove može se ponoviti i više puta, no nije kritično za izvršavanje programa.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{18}{\boxspacing}
@@ -762,6 +764,8 @@ Sad je naš labirint značajno pojednostavljen - broj vrhova trostruko se smanji
     \hypertarget{dijkstrin-algoritam}{%
 \section{Dijkstrin algoritam}\label{dijkstrin-algoritam}}
 
+U program se uvoze funkcije \texttt{RenderTree} i \texttt{Node} iz biblioteke \texttt{anytree} za izradu stabala te funkcija \texttt{dijkstra} iz istoimene skripte koja se nalazi u direktoriju \texttt{scripts}.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{21}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -769,6 +773,9 @@ Sad je naš labirint značajno pojednostavljen - broj vrhova trostruko se smanji
 \PY{k+kn}{from} \PY{n+nn}{anytree} \PY{k+kn}{import} \PY{n}{RenderTree}\PY{p}{,} \PY{n}{Node}
 \end{Verbatim}
 \end{tcolorbox}
+
+Algoritam kreće po grafu od ulaza u labirint. Prolazi kroz sve njegove vrhove i računa najkraći put do izlaza iz labirinta. Kad je obišao sve vrhove i pronašao najkraći put, staje s izvođenjem i vraća ga kao rezultat.
+Slijedi ispis vrhova kojima prolazi najkraći put prema njihovim imenima te duljina pronađenog najkraćeg puta.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{22}{\boxspacing}
@@ -801,6 +808,8 @@ Najbrži put do cilja dug je 62 kvadrata.
 \subsection{Očišćen graf - Dijkstrin
 algoritam}\label{oux10diux161ux107en-graf---dijkstrin-algoritam}}
 
+U nastavku je proveden isti algoritam na grafu koji je prethodno pojednostavljen funkcijom \texttt{clean\_graph}.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{24}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -811,6 +820,8 @@ algoritam}\label{oux10diux161ux107en-graf---dijkstrin-algoritam}}
 \end{Verbatim}
 \end{tcolorbox}
 
+Isto kao i prije, funkcija je stavljena u petlju koja se vrti 20 puta.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{25}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -819,12 +830,16 @@ algoritam}\label{oux10diux161ux107en-graf---dijkstrin-algoritam}}
 \end{Verbatim}
 \end{tcolorbox}
 
+Sad je graf spreman za provođenje algoritma. Zovemu funkciju za Dijkstrin algoritam kojoj proslijedimo očišćen graf kao argument.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{26}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{n}{distances\PYZus{}clean} \PY{o}{=} \PY{n}{dijkstra}\PY{p}{(}\PY{n}{dijkstra\PYZus{}clean}\PY{p}{,} \PY{n}{src\PYZus{}clean}\PY{p}{)}
 \end{Verbatim}
 \end{tcolorbox}
+
+Ako se ispišu rezultati nakon provođenja algoritma, put koji se vraća kao najkraći put ima znatno manje vrhova - njih 17. Na prvi se pogled može činiti kao da ovaj niz ima premalo informacija, no zapravo sadrži sve ključne vrhove koji čine najkraći put labirinta zato što između vrhova stupnja 2 koji su bili spajani u algoritmu za čišćenje grafa ionako postoji samo jedan, jedinstveni put.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{27}{\boxspacing}
@@ -839,6 +854,8 @@ Put od početka do cilja:  Node('/Smith/Johnson/Williams/Ramos/Wallace/Martinez/
 nderson/Taylor/White/Lopez/Harris/Clark/Lewis/Robinson/Ramirez/Wright/King')
 Broj vrhova u grafovu: 36
     \end{Verbatim}
+
+Nakon provođenja algoritma na očišćenom grafu, vidi se da je duljina najkraćeg puta identična onoj koja je dobivena provođenjem istog algoritma na originalnom grafu.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{28}{\boxspacing}
@@ -1771,7 +1788,7 @@ on/Phillips/Campbell/Ramirez/Evans/Turner/Torres/Wright/King')
 %
 %
 %    % Add a bibliography block to the postdoc
-%    
-%    
-    
+%
+%
+
 \end{document}
